@@ -29,7 +29,12 @@ export default function LanguageProvider({ children }) {
   const switchLocale = (l) => {
     setLocale(l);
     localStorage.setItem("locale", l);
+    document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
   };
+
+  useEffect(() => {
+    document.documentElement.dir = locale === "ar" ? "rtl" : "ltr";
+  }, [locale]);
 
   const t = (key) => {
     const map = translations[locale];
