@@ -44,7 +44,7 @@ function SidebarContent() {
           key={homeItem.href}
           href={homeItem.href}
           onClick={handleNav}
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] ${
             pathname === homeItem.href
               ? "primary-gradient text-white shadow-lg shadow-primary/30"
               : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
@@ -53,7 +53,7 @@ function SidebarContent() {
           <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: pathname === homeItem.href ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
             {homeItem.icon}
           </span>
-          <span className="sidebar-link-text">{t(homeItem.label)}</span>
+          <span className="sidebar-link-text flex-1">{t(homeItem.label)}</span>
         </Link>
         <div className="pt-3 pb-1 px-4">
           <span className="sidebar-heading-text">{t("AI Tools")}</span>
@@ -65,7 +65,7 @@ function SidebarContent() {
               key={item.href}
               href={item.href}
               onClick={handleNav}
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] ${
                 isActive
                   ? "primary-gradient text-white shadow-lg shadow-primary/30"
                   : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
@@ -74,7 +74,7 @@ function SidebarContent() {
               <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
                 {item.icon}
               </span>
-              <span className="sidebar-link-text">{t(item.label)}</span>
+              <span className="sidebar-link-text flex-1">{t(item.label)}</span>
             </Link>
           );
         })}
@@ -118,6 +118,7 @@ export default function Sidebar() {
           font-weight: 700;
           font-family: Geist, sans-serif;
           white-space: nowrap;
+          text-align: left;
         }
         .sidebar-heading-text {
           font-size: 10px;
