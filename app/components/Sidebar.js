@@ -39,24 +39,24 @@ function SidebarContent() {
           </div>
         </div>
       </Link>
-      <nav className="flex-1 space-y-1">
+      <nav className="flex-1 space-y-1 overflow-hidden">
         <Link
           key={homeItem.href}
           href={homeItem.href}
           onClick={handleNav}
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] ${
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
             pathname === homeItem.href
               ? "primary-gradient text-white shadow-lg shadow-primary/30"
               : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
           }`}
         >
-          <span className="material-symbols-outlined" style={{ fontVariationSettings: pathname === homeItem.href ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
+          <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: pathname === homeItem.href ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
             {homeItem.icon}
           </span>
-          <span className="font-bold text-sm tracking-wider" style={{ fontFamily: 'Geist, sans-serif' }}>{t(homeItem.label)}</span>
+          <span className="font-bold text-sm truncate" style={{ fontFamily: 'Geist, sans-serif' }}>{t(homeItem.label)}</span>
         </Link>
         <div className="pt-4 pb-1 px-4">
-          <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-[0.2em] opacity-60">{t("AI Tools")}</span>
+          <span className="text-[10px] text-on-surface-variant font-bold uppercase tracking-[0.2em] opacity-60 truncate block">{t("AI Tools")}</span>
         </div>
         {toolItems.map((item) => {
           const isActive = pathname === item.href;
@@ -65,26 +65,26 @@ function SidebarContent() {
               key={item.href}
               href={item.href}
               onClick={handleNav}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
                 isActive
                   ? "primary-gradient text-white shadow-lg shadow-primary/30"
                   : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
               }`}
             >
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
+              <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
                 {item.icon}
               </span>
-              <span className="font-bold text-sm tracking-wider" style={{ fontFamily: 'Geist, sans-serif' }}>{t(item.label)}</span>
+              <span className="font-bold text-sm truncate" style={{ fontFamily: 'Geist, sans-serif' }}>{t(item.label)}</span>
             </Link>
           );
         })}
       </nav>
-      <div className="mt-auto pt-4 border-t border-surface-border/40 px-2">
-        <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-surface-container-low border border-surface-border/40" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-cyan to-primary flex items-center justify-center">
+      <div className="mt-auto pt-4 border-t border-surface-border/40 px-2 overflow-hidden">
+        <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-surface-container-low border border-surface-border/40 min-w-0" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-cyan to-primary flex items-center justify-center shrink-0">
             <span className="material-symbols-outlined text-white text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
           </div>
-          <span className="text-[11px] text-on-surface-variant font-medium">{t("AI Credits")}: <span className="text-yellow-400 font-bold">0</span></span>
+          <span className="text-[11px] text-on-surface-variant font-medium truncate">{t("AI Credits")}: <span className="text-yellow-400 font-bold">0</span></span>
         </div>
       </div>
     </aside>
