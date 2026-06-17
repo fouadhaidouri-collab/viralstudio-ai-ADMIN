@@ -23,8 +23,8 @@ function SidebarContent() {
   const handleNav = () => setMobileOpen(false);
 
   return (
-    <aside className="fixed ltr:left-0 rtl:right-0 top-0 h-full w-64 bg-surface ltr:border-r rtl:border-l border-surface-border/80 z-50 flex flex-col p-4 overflow-y-auto" style={{ boxShadow: '4px 0 32px rgba(0,0,0,0.4)' }}>
-      <Link href="/" onClick={handleNav} className="mb-6 px-2 flex items-center gap-3 group relative">
+    <aside className="fixed ltr:left-0 rtl:right-0 top-0 h-full w-64 bg-surface ltr:border-r rtl:border-l border-surface-border/80 z-50 flex flex-col p-4" style={{ boxShadow: '4px 0 32px rgba(0,0,0,0.4)' }}>
+      <Link href="/" onClick={handleNav} className="mb-5 px-2 flex items-center gap-3 group relative">
         <div className="relative">
           <div className="absolute inset-0 rounded-xl blur-xl bg-primary/40 animate-pulse-glow" />
           <div className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 relative z-10" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #3b0764 100%)', boxShadow: '0 0 30px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' }}>
@@ -44,7 +44,7 @@ function SidebarContent() {
           key={homeItem.href}
           href={homeItem.href}
           onClick={handleNav}
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
             pathname === homeItem.href
               ? "primary-gradient text-white shadow-lg shadow-primary/30"
               : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
@@ -55,7 +55,7 @@ function SidebarContent() {
           </span>
           <span className="sidebar-link-text">{t(homeItem.label)}</span>
         </Link>
-        <div className="pt-4 pb-1 px-4">
+        <div className="pt-3 pb-1 px-4">
           <span className="sidebar-heading-text">{t("AI Tools")}</span>
         </div>
         {toolItems.map((item) => {
@@ -65,7 +65,7 @@ function SidebarContent() {
               key={item.href}
               href={item.href}
               onClick={handleNav}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] min-w-0 ${
                 isActive
                   ? "primary-gradient text-white shadow-lg shadow-primary/30"
                   : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
