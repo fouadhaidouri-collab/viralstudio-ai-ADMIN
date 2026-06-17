@@ -1,0 +1,46 @@
+"use client";
+
+import { createContext, useContext, useState, useEffect } from "react";
+import translations from "../translations";
+
+const LanguageContext = createContext();
+
+export function useTranslate() {
+  const ctx = useContext(LanguageContext);
+  return ctx ? ctx.t : (key) => key;
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext);
+}
+
+export default function LanguageProvider({ children }) {
+  const [locale, setLocale] = useState("en");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("locale");
+    if (saved === "ar" || saved === "en") {
+      setLocale(saved);
+    } else {
+      setLocale("en");
+    }
+  }, []);
+
+  const switchLocale = (l) => {
+    setLocale(l);
+    localStorage.setItem("locale", l);
+  };
+
+  const t = (key) => {
+    const map = translations[locale];
+    return map && map[key] !== undefined ? map[key] : key;
+  };
+
+  return (
+    <LanguageContext.Provider value={{ locale, setLocale: switchLocale, t }}>
+      <div dir={locale === "ar" ? "rtl" : "ltr"} className={locale === "ar" ? "rtl" : ""}>
+        {children}
+      </div>
+    </LanguageContext.Provider>
+  );
+}
