@@ -119,6 +119,8 @@ export default function Sidebar() {
           font-family: Geist, sans-serif;
           white-space: nowrap;
           text-align: left;
+          display: block;
+          flex: 1;
         }
         .sidebar-heading-text {
           font-size: 10px;
@@ -139,6 +141,7 @@ export default function Sidebar() {
           font-weight: 600;
           font-family: Tajawal, sans-serif;
           white-space: nowrap;
+          text-align: left;
         }
         [dir="rtl"] .sidebar-heading-text {
           letter-spacing: 0;
