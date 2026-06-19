@@ -57,7 +57,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
           {(() => {
             const p = pricingMap?.[value.label];
             const price = p ? p.unitPrice : 0;
-            return price ? <span className="text-[9px] text-yellow-400 font-medium shrink-0">{(price * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)} credit</span> : null;
+            return <span className="text-[9px] text-yellow-400 font-medium shrink-0">{(price * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)} credit</span>;
           })()}
         </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
@@ -83,9 +83,9 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                   {(() => {
                     const p = pricingMap?.[opt.label];
                     const price = p ? p.unitPrice : 0;
-                    return price ? (
+                    return (
                       <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} credit</span>
-                    ) : null;
+                    );
                   })()}
                   {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
                 </button>
