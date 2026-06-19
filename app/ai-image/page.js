@@ -23,7 +23,7 @@ const imageModels = [
   { label: "Grok", icon: "🔥", color: "#ef4444", endpoint: "fal-ai/flux-dev" },
 ];
 
-function ImageModelDropdown({ value, options, onChange, pricingMap, capabilities }) {
+function ImageModelDropdown({ value, options, onChange, pricingMap }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -74,28 +74,19 @@ function ImageModelDropdown({ value, options, onChange, pricingMap, capabilities
                 <button
                   key={opt.label}
                   onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full flex items-start gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
+                  className={`w-full flex items-center gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
                   style={{ paddingTop: "12px", paddingBottom: "12px", background: selected ? "rgba(139,92,246,0.15)" : "transparent" }}
                 >
-                  <span className="text-base flex-shrink-0 mt-0.5" role="img">{opt.icon}</span>
-                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
-                      {capabilities?.[opt.label]?.resolutions?.map(r => (
-                        <span key={r} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{r}</span>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {(() => {
-                        const p = pricingMap?.[opt.label];
-                        const price = p ? p.unitPrice : 0;
-                        return price ? (
-                          <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
-                        ) : null;
-                      })()}
-                      {selected && <Icon name="check" className="text-xs text-primary ml-auto" />}
-                    </div>
-                  </div>
+                  <span className="text-base flex-shrink-0" role="img">{opt.icon}</span>
+                  <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
+                  {(() => {
+                    const p = pricingMap?.[opt.label];
+                    const price = p ? p.unitPrice : 0;
+                    return price ? (
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
+                    ) : null;
+                  })()}
+                  {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
                 </button>
               );
             })}
@@ -347,7 +338,7 @@ export default function AIImagePage() {
               <div className="mt-auto pt-3 shrink-0 space-y-2">
                 <div>
                   <div className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1.5 font-medium">Model</div>
-                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} pricingMap={pricing} capabilities={imageModelCapabilities} />
+                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} pricingMap={pricing}  />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">

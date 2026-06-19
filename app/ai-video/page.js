@@ -47,7 +47,7 @@ const FAL_MODEL_IDS = {
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
-function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution, capabilities }) {
+function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -99,31 +99,19 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                 <button
                   key={opt.label}
                   onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full flex items-start gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
+                  className={`w-full flex items-center gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
                   style={{ paddingTop: "12px", paddingBottom: "12px", background: selected ? "rgba(139,92,246,0.15)" : "transparent" }}
                 >
-                  <Icon name={opt.icon} className="text-base flex-shrink-0 mt-0.5" style={{ color: opt.color }} />
-                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
-                      {capabilities?.[opt.label]?.resolutions?.map(r => (
-                        <span key={r} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{r}</span>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {(() => {
-                        const p = pricingMap?.[opt.label];
-                        const price = p ? p.unitPrice : 0;
-                        return price ? (
-                          <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
-                        ) : null;
-                      })()}
-                      {capabilities?.[opt.label]?.durations?.map(d => (
-                        <span key={d} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{d.replace(" seconds", "s")}</span>
-                      ))}
-                      {selected && <Icon name="check" className="text-xs text-primary ml-auto" />}
-                    </div>
-                  </div>
+                  <Icon name={opt.icon} className="text-base flex-shrink-0" style={{ color: opt.color }} />
+                  <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
+                  {(() => {
+                    const p = pricingMap?.[opt.label];
+                    const price = p ? p.unitPrice : 0;
+                    return price ? (
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
+                    ) : null;
+                  })()}
+                  {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
                 </button>
               );
             })}
@@ -398,7 +386,7 @@ export default function AIVideoPage() {
               )}
 
               <div className="mt-auto pt-3 shrink-0 space-y-2">
-                <ModelDropdown label="AI Model" value={model} options={aiModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution} capabilities={videoModelCapabilities} />
+                <ModelDropdown label="AI Model" value={model} options={aiModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution}  />
                 <div className={`grid grid-cols-2 gap-2 ${availableAspectRatios.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
                   {availableAspectRatios.length > 0 && (
                     <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={availableAspectRatios} onChange={(v) => setAspectRatio(v)} compact />
