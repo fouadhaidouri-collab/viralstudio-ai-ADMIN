@@ -56,8 +56,8 @@ function ImageModelDropdown({ value, options, onChange, pricingMap, creditSettin
             <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
             {(() => {
               const p = pricingMap?.[value.label];
-              const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
-              return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">{c} cr</span>;
+              const c = calcModelCredits(p?.unitPrice ?? 0.05, 1, creditSettings);
+              return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">{c} credit</span>;
             })()}
           </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
@@ -82,9 +82,9 @@ function ImageModelDropdown({ value, options, onChange, pricingMap, creditSettin
                   <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
                   {(() => {
                     const p = pricingMap?.[opt.label];
-                    const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
+                    const c = calcModelCredits(p?.unitPrice ?? 0.05, 1, creditSettings);
                     return c != null && (
-                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{c} cr</span>
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{c} credit</span>
                     );
                   })()}
                   {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
@@ -177,7 +177,11 @@ export default function AIImagePage() {
         if (data.prices) {
           const m = {};
           for (const mod of imageModels) {
-            if (data.prices[mod.fal_model]) m[mod.label] = data.prices[mod.fal_model];
+            if (data.prices[mod.fal_model]) {
+              m[mod.label] = data.prices[mod.fal_model];
+            } else {
+              m[mod.label] = { unitPrice: null, pricingUnavailable: true };
+            }
           }
           setPricing(m);
         }
@@ -249,7 +253,7 @@ export default function AIImagePage() {
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
     const p = pricing?.[selectedModel.label];
-    const needed = calcModelCredits(p?.unitPrice, imageCount, creditSettings);
+    const needed = calcModelCredits(p?.unitPrice ?? 0.05, imageCount, creditSettings);
     if (needed != null && credits < needed) { setNeededCredits(needed); setShowCreditModal(true); return; }
     setGenerating(true);
     setImageUrls([]);
@@ -389,9 +393,9 @@ export default function AIImagePage() {
                     <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Generating...</>
                   ) : (
                     <><Icon name="auto_awesome" className="text-sm" /> Generate Image {(() => {
-                      const up = pricing?.[selectedModel.label]?.unitPrice;
+                      const up = pricing?.[selectedModel.label]?.unitPrice ?? 0.05;
                       const c = calcModelCredits(up, imageCount, creditSettings);
-                      return c != null && <span className="text-yellow-300/90">({c} cr)</span>;
+                      return c != null && <span className="text-yellow-300/90">({c} credit)</span>;
                     })()}</>
                   )}
                 </button>
@@ -457,7 +461,7 @@ export default function AIImagePage() {
         </div>
       </main>
       </SidebarProvider>
-      {showCreditModal && <InsufficientCreditsModal needed={neededCredits} current={credits} onClose={() => setShowCreditModal(false)} />}
+      {showCreditModal && <InsufficientCreditsModal needed={neededCredits} available={credits} onClose={() => setShowCreditModal(false)} />}
     </div>
   );
 }

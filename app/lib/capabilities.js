@@ -1,28 +1,34 @@
 export const videoAspectRatios = [
-  { label: "Cinematic 16:9", icon: "crop_16_9" },
-  { label: "Instagram 9:16", icon: "crop_portrait" },
-  { label: "Square 1:1", icon: "crop_square" },
-  { label: "Portrait 4:5", icon: "crop_7_5" },
+  { label: "16:9", icon: "crop_16_9" },
+  { label: "9:16", icon: "crop_portrait" },
+  { label: "1:1", icon: "crop_square" },
+  { label: "4:5", icon: "crop_7_5" },
+  { label: "5:4", icon: "crop_7_5" },
+  { label: "3:2", icon: "crop_7_5" },
+  { label: "2:3", icon: "crop_7_5" },
+  { label: "4:3", icon: "crop_7_5" },
+  { label: "3:4", icon: "crop_7_5" },
 ];
 
 export const videoResolutions = ["720p", "1080p"];
 export const videoDurations = ["5 seconds", "8 seconds", "10 seconds", "15 seconds"];
 
 export const videoModels = [
-  { label: "Veo 3.1 Fast", icon: "videocam", color: "#7c3aed", fal_model: "fal-ai/veo3.1/fast", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds", "8 seconds"] } },
-  { label: "Grok Imagine Video", icon: "psychology", color: "#06b6d4", fal_model: "xai/grok-imagine-video/text-to-video", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "SeeDance 1.5", icon: "directions_run", color: "#f59e0b", fal_model: "bytedance/seedance/v1.5/pro/text-to-video", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "SeeDance 2.0", icon: "directions_run", color: "#f97316", fal_model: "bytedance/seedance-2.0/text-to-video", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "Kling 3.0", icon: "smart_display", color: "#ef4444", fal_model: "kling-video/v3/pro/text-to-video", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "Runway Gen 4.5", icon: "run_circle", color: "#10b981", fal_model: "fal-ai/runway-gen-3", options: { aspect_ratio: [], resolution: ["720p", "1080p"], duration: ["5 seconds", "8 seconds", "10 seconds"] } },
-  { label: "Luma Ray 2", icon: "flare", color: "#8b5cf6", fal_model: "fal-ai/luma-dream-machine", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "Pika 2.1", icon: "pets", color: "#ec4899", fal_model: "fal-ai/pika", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
-  { label: "Happy Horse", icon: "emoji_nature", color: "#14b8a6", fal_model: "alibaba/happy-horse/text-to-video", options: { aspect_ratio: ["Cinematic 16:9", "Instagram 9:16", "Square 1:1", "Portrait 4:5"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
+  { id: "veo_31_fast", label: "Veo 3.1 Fast", icon: "videocam", color: "#7c3aed", fal_model: "fal-ai/veo3.1/fast/image-to-video", options: { aspect_ratio: ["9:16", "16:9"], resolution: ["720p", "1080p", "4k"], duration: ["4 seconds", "6 seconds", "8 seconds"] } },
+  { id: "grok_imagine_video", label: "Grok Imagine Video", icon: "psychology", color: "#06b6d4", fal_model: "xai/grok-imagine-video/image-to-video", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["4 seconds", "6 seconds", "8 seconds"] } },
+  { id: "seedance_15", label: "SeeDance 1.5", icon: "directions_run", color: "#f59e0b", fal_model: "fal-ai/bytedance/seedance/v1.5/pro/image-to-video", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["5 seconds", "10 seconds"] } },
+  { id: "seedance_20", label: "SeeDance 2.0", icon: "directions_run", color: "#f97316", fal_model: "bytedance/seedance-2.0/image-to-video", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["5 seconds", "10 seconds", "15 seconds"] } },
+  { id: "kling_30", label: "Kling 3.0", icon: "smart_display", color: "#ef4444", fal_model: "fal-ai/kling-video/v3/standard/image-to-video", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["5 seconds", "10 seconds"] } },
+  { id: "runway_gen_45", label: "Runway Gen 4.5", icon: "run_circle", color: "#10b981", fal_model: "runway/gen4.5", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["5 seconds", "10 seconds"] } },
+  { id: "luma_ray_2", label: "Luma Ray 2", icon: "flare", color: "#8b5cf6", fal_model: "fal-ai/luma-dream-machine/ray-2", options: { aspect_ratio: ["9:16", "16:9", "1:1"], resolution: ["720p", "1080p"], duration: ["5 seconds", "9 seconds"] } },
+  { id: "pika_21", label: "Pika 2.1", icon: "pets", color: "#ec4899", fal_model: "fal-ai/pika/v2.1/image-to-video", options: { aspect_ratio: ["16:9", "9:16", "1:1", "4:5", "5:4", "3:2", "2:3"], resolution: ["720p", "1080p"], duration: ["5 seconds"] } },
+  { id: "happy_horse", label: "Happy Horse", icon: "emoji_nature", color: "#14b8a6", fal_model: "alibaba/happy-horse/image-to-video", options: { aspect_ratio: ["16:9", "9:16", "1:1", "4:3", "3:4"], resolution: ["720p", "1080p"], duration: ["5 seconds", "10 seconds"] } },
 ];
 
 export const aiModels = videoModels.map(({ label, icon, color }) => ({ label, icon, color }));
 
 export const FAL_MODEL_IDS = Object.fromEntries(videoModels.map(m => [m.label, m.fal_model]));
+export const MODEL_BY_ID = Object.fromEntries(videoModels.map(m => [m.id, m]));
 
 export const videoModelCapabilities = Object.fromEntries(videoModels.map(m => [
   m.label,
@@ -30,6 +36,7 @@ export const videoModelCapabilities = Object.fromEntries(videoModels.map(m => [
     aspectRatios: m.options.aspect_ratio || [],
     resolutions: m.options.resolution || [],
     durations: m.options.duration || [],
+    styles: [],
   },
 ]));
 
@@ -60,8 +67,6 @@ export const imageModelCapabilities = Object.fromEntries(imageModels.map(m => [
 
 // Option label map for dynamic rendering
 export const OPTION_LABELS = {
-  aspect_ratio: "Aspect Ratio",
   resolution: "Resolution",
   duration: "Duration",
-  style: "Style",
 };

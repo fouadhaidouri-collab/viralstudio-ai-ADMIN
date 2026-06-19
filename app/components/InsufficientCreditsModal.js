@@ -1,8 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import Icon from "./Icon";
-export default function InsufficientCreditsModal({ needed, current, onClose }) {
+export default function InsufficientCreditsModal({ needed, available, onClose }) {
   const router = useRouter();
+  const current = available ?? 0;
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-surface-container border border-surface-border/60 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()} style={{ boxShadow: "0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.08)" }}>
@@ -15,6 +16,7 @@ export default function InsufficientCreditsModal({ needed, current, onClose }) {
             <p className="text-xs text-on-surface-variant/80 leading-relaxed">
               You need <span className="text-yellow-400 font-semibold">{needed}</span> credits but you have <span className="text-on-surface-variant font-semibold">{current}</span>.
             </p>
+            <p className="text-[10px] text-yellow-400/70 font-medium">$29 = 1000 credits</p>
           </div>
           <div className="flex gap-2 w-full pt-1">
             <button onClick={onClose} className="flex-1 px-4 py-2.5 rounded-xl border border-surface-border/60 text-xs font-medium text-on-surface-variant hover:bg-surface-container-high transition-all">

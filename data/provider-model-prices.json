@@ -1,1 +1,101 @@
-{}
+{
+  "fal-ai/veo3.1/fast/image-to-video": {
+    "unit_price": 0.15,
+    "unit": "seconds",
+    "currency": "USD",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:57:20.769Z"
+  },
+  "xai/grok-imagine-video/image-to-video": {
+    "unit_price": 0.05,
+    "unit": "seconds",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:03.189Z"
+  },
+  "fal-ai/bytedance/seedance/v1.5/pro/image-to-video": {
+    "unit_price": 0.007,
+    "unit": "units",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:05.453Z"
+  },
+  "bytedance/seedance-2.0/image-to-video": {
+    "unit_price": 0.014,
+    "unit": "units",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:07.720Z"
+  },
+  "fal-ai/kling-video/v3/standard/image-to-video": {
+    "unit_price": 0.1,
+    "unit": "seconds",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:09.948Z"
+  },
+  "runway/gen4.5": {
+    "unit_price": 0.05,
+    "unit": "seconds",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:12.162Z"
+  },
+  "fal-ai/luma-dream-machine/ray-2": {
+    "unit_price": 0.5,
+    "unit": "videos",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:14.559Z"
+  },
+  "fal-ai/recraft-20b": {
+    "unit_price": 0.0219,
+    "unit": "images",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:23.557Z"
+  },
+  "fal-ai/pika/v2.1/image-to-video": {
+    "unit_price": 0.00017,
+    "unit": "compute seconds",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:37.396Z"
+  },
+  "alibaba/happy-horse/image-to-video": {
+    "unit_price": 0.14,
+    "unit": "seconds",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:49:56.401Z"
+  },
+  "fal-ai/imagen-3": {
+    "unit_price": 0.04,
+    "unit": "images",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:50:03.318Z"
+  },
+  "fal-ai/flux-pro": {
+    "unit_price": 0.05,
+    "unit": "megapixels",
+    "currency": "USD",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:57:20.982Z"
+  },
+  "fal-ai/ideogram/v2": {
+    "unit_price": 0.08,
+    "unit": "images",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:48:14.481Z"
+  },
+  "fal-ai/stable-diffusion-v3": {
+    "unit_price": 0.01,
+    "unit": "images",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:52:30.000Z"
+  },
+  "fal-ai/flux-dev": {
+    "unit_price": 0.005,
+    "unit": "images",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:52:30.000Z"
+  },
+  "fal-ai/veo3": {
+    "unit_price": 0.4,
+    "unit": "seconds",
+    "currency": "USD",
+    "pricing_unavailable": false,
+    "last_synced_at": "2026-06-19T06:56:18.057Z"
+  }
+}

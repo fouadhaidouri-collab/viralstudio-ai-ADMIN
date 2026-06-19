@@ -10,7 +10,7 @@ import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
 import {
-  videoModels, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
+  videoModels, videoAspectRatios, videoResolutions, videoModelCapabilities
 } from "../lib/capabilities";
 
 const BASE_DURATION_SEC = 5;
@@ -55,19 +55,19 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
 
   return (
     <div ref={ref} className="w-full">
-      <div className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1.5 font-medium" style={{ fontFamily: 'Geist, sans-serif' }}>{label}</div>
+      <div className="text-[10px] text-white/40 uppercase tracking-wider mb-1.5 font-semibold" style={{ fontFamily: 'Geist, sans-serif' }}>{label}</div>
       <button
         ref={btnRef}
         onClick={toggle}
-        className={`w-full flex items-center justify-between gap-1.5 bg-surface-container-lowest border border-surface-border rounded-xl hover:border-primary/50 transition-all ${compact ? 'px-2.5 py-1.5' : 'px-3.5 py-3 text-sm'}`}
+        className={`w-full flex items-center justify-between gap-1.5 bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-white/10 rounded-xl hover:border-primary/40 hover:from-primary/[0.08] hover:to-primary/[0.02] transition-all duration-200 shadow-sm ${compact ? 'px-2.5 py-1.5' : 'px-3.5 py-3 text-sm'}`}
       >
         <span className="flex items-center gap-1.5 truncate min-w-0">
           <Icon name={value.icon} className="text-sm flex-shrink-0" style={{ color: value.color }} />
           <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
           {(() => {
             const p = pricingMap?.[value.label];
-            const c = calcModelCredits(p?.unitPrice, durationMultiplier(duration) * resolutionMultiplier(resolution), creditSettings);
-            return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">{c} cr</span>;
+            const c = calcModelCredits(p?.unitPrice ?? 0.05, durationMultiplier(duration) * resolutionMultiplier(resolution), creditSettings);
+            return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">({c} credit)</span>;
           })()}
         </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
@@ -92,9 +92,9 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                   <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
                   {(() => {
                     const p = pricingMap?.[opt.label];
-                    const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
+                    const c = calcModelCredits(p?.unitPrice ?? 0.05, 1, creditSettings);
                     return c != null && (
-                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{c} cr</span>
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">({c} credit)</span>
                     );
                   })()}
                   {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
@@ -121,12 +121,12 @@ function Dropdown({ label, value, options, onChange, compact }) {
 
   return (
     <div ref={ref} className="relative w-full">
-      <div className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1.5 font-medium" style={{ fontFamily: 'Geist, sans-serif' }}>{label}</div>
+      <div className="text-[10px] text-white/40 uppercase tracking-wider mb-1.5 font-semibold" style={{ fontFamily: 'Geist, sans-serif' }}>{label}</div>
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center justify-between gap-2 bg-surface-container-lowest border border-surface-border rounded-lg hover:border-primary/50 transition-colors ${compact ? 'px-2.5 py-2 text-xs' : 'px-3 py-2.5 text-sm'}`}
+        className={`w-full flex items-center justify-between gap-2 bg-gradient-to-b from-white/[0.07] to-white/[0.02] border border-white/10 rounded-xl hover:border-primary/40 hover:from-primary/[0.08] hover:to-primary/[0.02] transition-all duration-200 shadow-sm ${compact ? 'px-3 py-2.5 text-xs' : 'px-3 py-2.5 text-sm'}`}
       >
-        <span className="truncate flex items-center gap-1.5">
+        <span className="truncate flex items-center gap-1.5 font-medium">
           {(() => {
             const match = options.find(o => (typeof o === "string" ? o : o.label) === value);
             if (match && typeof match !== "string") {
@@ -138,12 +138,12 @@ function Dropdown({ label, value, options, onChange, compact }) {
         <Icon name="expand_more" className={`text-sm text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="absolute bottom-full left-0 right-0 mb-1 bg-surface-container border border-surface-border rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto py-1">
+        <div className="absolute bottom-full left-0 right-0 mb-2 bg-surface-container/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-48 overflow-y-auto py-1.5">
           {options.map((opt) => (
             <button
               key={typeof opt === "string" ? opt : opt.label}
               onClick={() => { onChange(opt); setOpen(false); }}
-              className={`w-full text-left px-3 py-2 text-sm hover:bg-surface-container-high transition-colors flex items-center gap-2 ${value === (typeof opt === "string" ? opt : opt.label) ? "text-primary bg-primary/5" : "text-on-surface"}`}
+              className={`w-full text-left px-3 py-2.5 text-sm transition-all duration-150 flex items-center gap-2 ${value === (typeof opt === "string" ? opt : opt.label) ? "text-white bg-primary/15 border-l-2 border-primary" : "text-on-surface hover:bg-white/[0.06] hover:text-white border-l-2 border-transparent"}`}
             >
               {typeof opt !== "string" && <Icon name={opt.icon} className="text-base" style={{color: opt.color || "#d2bbff"}} />}
               {typeof opt === "string" ? opt : opt.label}
@@ -160,7 +160,13 @@ export default function AIVideoPage() {
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(videoModels[0]);
   const [modelConfigs, setModelConfigs] = useState({});
-  const currentConfig = modelConfigs[model.label] || { aspectRatio: videoAspectRatios[0], resolution: videoResolutions[0], duration: videoDurations[0] };
+
+  const caps = videoModelCapabilities[model.label] || videoModelCapabilities["Veo 3.1 Fast"];
+  const defaultDurations = caps.durations.length > 0 ? caps.durations : ["5 seconds"];
+  const availableAspectRatios = videoAspectRatios.filter(ar => caps.aspectRatios.includes(ar.label));
+  const availableResolutions = videoResolutions.filter(r => caps.resolutions.includes(r));
+  const availableDurations = caps.durations;
+  const currentConfig = modelConfigs[model.label] || { aspectRatio: videoAspectRatios[0], resolution: videoResolutions[0], duration: defaultDurations[0] };
   const updateConfig = (key, value) => {
     setModelConfigs(prev => ({ ...prev, [model.label]: { ...(prev[model.label] || {}), [key]: value } }));
   };
@@ -199,7 +205,11 @@ export default function AIVideoPage() {
         if (data.prices) {
           const m = {};
           for (const mod of videoModels) {
-            if (data.prices[mod.fal_model]) m[mod.label] = data.prices[mod.fal_model];
+            if (data.prices[mod.fal_model]) {
+              m[mod.label] = data.prices[mod.fal_model];
+            } else {
+              m[mod.label] = { unitPrice: null, pricingUnavailable: true };
+            }
           }
           setPricing(m);
         }
@@ -219,17 +229,12 @@ export default function AIVideoPage() {
       .catch(() => {});
   }, []);
 
-  const caps = videoModelCapabilities[model.label] || videoModelCapabilities["Veo 3.1 Fast"];
-  const availableAspectRatios = videoAspectRatios.filter(ar => caps.aspectRatios.includes(ar.label));
-  const availableResolutions = videoResolutions.filter(r => caps.resolutions.includes(r));
-  const availableDurations = videoDurations.filter(d => caps.durations.includes(d));
-
   useEffect(() => {
     const c = videoModelCapabilities[model.label];
     if (!c) return;
     const existing = modelConfigs[model.label];
     if (!existing) {
-      const defaults = { aspectRatio: videoAspectRatios[0], resolution: videoResolutions[0], duration: videoDurations[0] };
+      const defaults = { aspectRatio: videoAspectRatios[0], resolution: videoResolutions[0], duration: defaultDurations[0] };
       if (c.aspectRatios.length > 0) {
         const found = videoAspectRatios.find(ar => ar.label === c.aspectRatios[0]);
         if (found) defaults.aspectRatio = found;
@@ -277,7 +282,14 @@ export default function AIVideoPage() {
     const subRes = await fetch("/api/generate-video", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt, modelId, aspectRatio: currentConfig.aspectRatio.label }),
+      body: JSON.stringify({
+        prompt,
+        modelId,
+        aspectRatio: currentConfig.aspectRatio?.label || "16:9",
+        resolution: currentConfig.resolution,
+        duration: currentConfig.duration,
+
+      }),
     });
 
     if (!subRes.ok) {
@@ -312,7 +324,7 @@ export default function AIVideoPage() {
 
     const p = pricing?.[model.label];
     const quantity = videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution);
-    const needed = calcModelCredits(p?.unitPrice, quantity, creditSettings);
+    const needed = calcModelCredits(p?.unitPrice ?? 0.05, quantity, creditSettings);
     if (needed != null && credits < needed) {
       setNeededCredits(needed);
       setShowCreditModal(true);
@@ -405,7 +417,7 @@ export default function AIVideoPage() {
 
               <div className="mt-auto pt-3 shrink-0 space-y-2">
                 <ModelDropdown label="AI Model" value={model} options={videoModels} onChange={setModel} compact pricingMap={pricing} duration={currentConfig.duration} resolution={currentConfig.resolution} creditSettings={creditSettings} />
-                <div className={`grid grid-cols-2 gap-2 ${availableAspectRatios.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                   {availableAspectRatios.length > 0 && (
                     <Dropdown label="Aspect Ratio" value={currentConfig.aspectRatio.label} options={availableAspectRatios} onChange={(v) => updateConfig("aspectRatio", v)} compact />
                   )}
@@ -425,13 +437,38 @@ export default function AIVideoPage() {
                     <><Icon name="auto_videocam" className="text-sm" /> Generate Video {(() => {
                       const p = pricing?.[model.label];
                       const quantity = videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution);
-                      const c = calcModelCredits(p?.unitPrice, quantity, creditSettings);
-                      return c != null && <span className="text-yellow-300/90">({c} cr)</span>;
+                      const c = calcModelCredits(p?.unitPrice ?? 0.05, quantity, creditSettings);
+                      return c != null && <span className="text-yellow-300/90">({c} credit)</span>;
                     })()}</>
-                )}
+                  )}
                 </button>
 
               </div>
+            </div>
+          </div>
+
+          {/* RIGHT: Preview Area */}
+          <div className="hidden xl:flex flex-col gap-3 min-w-0">
+            <div style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }} className="glass-card rounded-2xl relative bg-black flex-1 flex flex-col border border-white/5 card-glow">
+              <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
+                <div style={{ background: 'radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)' }} className="absolute inset-0"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center animate-pulse mb-4">
+                    <Icon name="circle_play" className="text-primary text-3xl" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
+                <Icon name="download" className="text-base" /> Download
+              </button>
+              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
+                <Icon name="share" className="text-base" /> Share
+              </button>
+              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
+                <Icon name="rotate" className="text-base" /> Regenerate
+              </button>
             </div>
           </div>
 
@@ -454,73 +491,16 @@ export default function AIVideoPage() {
               </div>
             </div>
           )}
-
-          {/* RIGHT: Preview */}
-          <div className="hidden xl:flex flex-col gap-3 min-w-0">
-            <div className="glass-card rounded-2xl relative bg-black flex-1 flex flex-col border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
-              {videoUrls.length > 0 ? (
-                <div className="p-4 grid grid-cols-2 gap-3">
-                  {videoUrls.map((url, i) => (
-                    <video key={i} src={url} controls className="w-full rounded-lg object-contain bg-black/50" style={{ maxHeight: '260px' }} />
-                  ))}
-                </div>
-              ) : generating ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                  <div className="relative mb-5 mx-auto w-fit">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center animate-pulse mx-auto">
-                      <Icon name="hourglass_top" className="text-primary text-3xl" />
-                    </div>
-                    <div className="absolute inset-0 border-2 border-primary/30 rounded-full animate-ping"></div>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-1 text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Generating {videoCount > 1 ? `(${videoUrls.length}/${videoCount})` : ''}...</h3>
-                  <p className="text-sm text-on-surface-variant">This usually takes 30–90 seconds per video</p>
-                </div>
-              ) : videoError ? (
-                <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
-                  <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-5">
-                    <Icon name="error_outline" className="text-red-400 text-3xl" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-1 text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Generation Failed</h3>
-                  <p className="text-sm text-red-400/80">{videoError}</p>
-                </div>
-              ) : (
-                <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)' }} />
-                  <div className="relative z-10 flex flex-col items-center">
-                    <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center animate-pulse mb-4">
-                      <Icon name="play_circle" className="text-primary text-3xl" />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <Icon name="download" className="text-base" /> Download
-              </button>
-              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <Icon name="share" className="text-base" /> Share
-              </button>
-              <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <Icon name="replay" className="text-base" /> Regenerate
-              </button>
-            </div>
-
-          </div>
         </div>
       </main>
+      {showCreditModal && (
+        <InsufficientCreditsModal
+          needed={neededCredits}
+          available={credits}
+          onClose={() => setShowCreditModal(false)}
+        />
+      )}
       </SidebarProvider>
-      {showCreditModal && <InsufficientCreditsModal needed={neededCredits} current={credits} onClose={() => setShowCreditModal(false)} />}
-      <style jsx global>{`
-        @keyframes dropdown-open {
-          from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .animate-dropdown-open {
-          animation: dropdown-open 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-      `}</style>
     </div>
   );
 }

@@ -1,12 +1,12 @@
 import { getModuleCreditPrice, getProviderPrices } from "@/lib/pricing";
 
 export async function GET(request, { params }) {
-  const { id } = await params;
-  const modulePrice = getModuleCreditPrice(id);
+  const { module_id } = await params;
+  const modulePrice = getModuleCreditPrice(module_id);
   const providerPrices = getProviderPrices();
 
   if (!modulePrice) {
-    return Response.json({ error: "Module not found", module_id: id }, { status: 404 });
+    return Response.json({ error: "Module not found", module_id }, { status: 404 });
   }
 
   const providerRecord = providerPrices[modulePrice.endpoint_id];

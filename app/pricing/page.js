@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileDropdown from "../components/ProfileDropdown";
@@ -14,6 +14,7 @@ const plans = [
     sub: "For creators starting their video journey",
     monthly: 25,
     popular: false,
+    credits: 1200,
     cta: "Buy Now",
     features: [
       "1 user",
@@ -35,6 +36,7 @@ const plans = [
     sub: "For creators who need pro-quality results",
     monthly: 35,
     popular: true,
+    credits: 12000,
     badge: "Save 30%",
     cta: "Buy Now",
     features: [
@@ -58,6 +60,7 @@ const plans = [
     sub: "For teams collaborating on video creation",
     monthly: 119,
     popular: false,
+    credits: 28800,
     badge: "Save 30%",
     cta: "Buy Now",
     features: [
@@ -108,6 +111,11 @@ export default function PricingPage() {
   const router = useRouter();
   const { setMobileOpen } = useSidebar();
   const [annual, setAnnual] = useState(true);
+  const [credits, setCredits] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/credits").then(r => r.json()).then(d => { if (d.balance != null) setCredits(d.balance); }).catch(() => {});
+  }, []);
 
   return (
     <div className="h-screen overflow-hidden bg-background">
@@ -125,7 +133,8 @@ export default function PricingPage() {
             </button>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
               <Icon name="bolt" className="text-sm text-yellow-400" />
-              <span className="text-sm font-bold text-yellow-400">0</span>
+              <span className="text-sm font-bold text-yellow-400">{credits ?? 0}</span>
+              <span className="text-[9px] text-yellow-400/50 font-medium mr-1">remaining</span>
               <button onClick={() => router.push("/pricing")} className="w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
                 <Icon name="add" className="text-[10px] text-yellow-400" />
               </button>
@@ -230,6 +239,12 @@ export default function PricingPage() {
                   >
                     {plan.cta === "Let's Talk" ? "Contact Sales" : plan.cta}
                   </button>
+
+                  {plan.monthly && (
+                    <p className="text-center text-[10px] text-yellow-400 font-medium mt-[-16px] mb-4">
+                      {plan.credits.toLocaleString()} credits/year
+                    </p>
+                  )}
 
                   <div className="space-y-2.5 flex-1">
                     {plan.features.map((f, i) => (
