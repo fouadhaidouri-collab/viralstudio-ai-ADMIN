@@ -10,7 +10,7 @@ import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
 import {
-  USD_TO_CREDIT, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
+  USD_TO_CREDIT, videoModels, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
 } from "../lib/capabilities";
 
 const BASE_DURATION_SEC = 5;
@@ -20,30 +20,6 @@ const secFromDuration = (d) => {
 };
 const durationMultiplier = (d) => secFromDuration(d) / BASE_DURATION_SEC;
 const resolutionMultiplier = (r) => r === "1080p" ? 1.5 : 1;
-
-const aiModels = [
-  { label: "Veo 3.1 Fast", icon: "videocam", color: "#7c3aed" },
-  { label: "Grok Imagine Video", icon: "psychology", color: "#06b6d4" },
-  { label: "SeeDance 1.5", icon: "directions_run", color: "#f59e0b" },
-  { label: "SeeDance 2.0", icon: "directions_run", color: "#f97316" },
-  { label: "Kling 3.0", icon: "smart_display", color: "#ef4444" },
-  { label: "Runway Gen 4.5", icon: "run_circle", color: "#10b981" },
-  { label: "Luma Ray 2", icon: "flare", color: "#8b5cf6" },
-  { label: "Pika 2.1", icon: "pets", color: "#ec4899" },
-  { label: "Happy Horse", icon: "emoji_nature", color: "#14b8a6" },
-];
-
-const FAL_MODEL_IDS = {
-  "Veo 3.1 Fast": "fal-ai/veo3.1/fast",
-  "Grok Imagine Video": "xai/grok-imagine-video/text-to-video",
-  "SeeDance 1.5": "bytedance/seedance/v1.5/pro/text-to-video",
-  "SeeDance 2.0": "bytedance/seedance-2.0/text-to-video",
-  "Kling 3.0": "kling-video/v3/pro/text-to-video",
-  "Runway Gen 4.5": "fal-ai/runway-gen-3",
-  "Luma Ray 2": "fal-ai/luma-dream-machine",
-  "Pika 2.1": "fal-ai/pika",
-  "Happy Horse": "alibaba/happy-horse/text-to-video",
-};
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
@@ -172,7 +148,7 @@ function Dropdown({ label, value, options, onChange, compact }) {
 export default function AIVideoPage() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
-  const [model, setModel] = useState(aiModels[0]);
+  const [model, setModel] = useState(videoModels[0]);
   const [aspectRatio, setAspectRatio] = useState(videoAspectRatios[0]);
   const [resolution, setResolution] = useState(videoResolutions[0]);
   const [duration, setDuration] = useState(videoDurations[0]);
@@ -203,14 +179,14 @@ export default function AIVideoPage() {
   }, []);
 
   useEffect(() => {
-    const ids = Object.values(FAL_MODEL_IDS).join(",");
+    const ids = videoModels.map(m => m.fal_model).join(",");
     fetch(`/api/model-pricing?endpoint_ids=${ids}`)
       .then((r) => r.json())
       .then((data) => {
         if (data.prices) {
           const m = {};
-          for (const [label, eid] of Object.entries(FAL_MODEL_IDS)) {
-            if (data.prices[eid]) m[label] = data.prices[eid];
+          for (const mod of videoModels) {
+            if (data.prices[mod.fal_model]) m[mod.label] = data.prices[mod.fal_model];
           }
           setPricing(m);
         }
@@ -251,7 +227,7 @@ export default function AIVideoPage() {
   };
 
   const generateOne = async () => {
-    const modelId = FAL_MODEL_IDS[model.label];
+    const modelId = model.fal_model;
     if (!modelId) throw new Error(`Unknown model: ${model.label}`);
 
     const subRes = await fetch("/api/generate-video", {
@@ -386,7 +362,7 @@ export default function AIVideoPage() {
               )}
 
               <div className="mt-auto pt-3 shrink-0 space-y-2">
-                <ModelDropdown label="AI Model" value={model} options={aiModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution}  />
+                <ModelDropdown label="AI Model" value={model} options={videoModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution}  />
                 <div className={`grid grid-cols-2 gap-2 ${availableAspectRatios.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
                   {availableAspectRatios.length > 0 && (
                     <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={availableAspectRatios} onChange={(v) => setAspectRatio(v)} compact />

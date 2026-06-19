@@ -9,19 +9,10 @@ import { SidebarProvider, useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
 import {
-  USD_TO_CREDIT, imageAspectRatios, imageResolutions, imageModelCapabilities
+  USD_TO_CREDIT, imageModels, imageAspectRatios, imageResolutions, imageModelCapabilities
 } from "../lib/capabilities";
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
-
-const imageModels = [
-  { label: "GPT Image 2", icon: "🧠", color: "#10b981", endpoint: "fal-ai/flux-pro" },
-  { label: "NanoBanana 2", icon: "🍌", color: "#f59e0b", endpoint: "fal-ai/recraft-20b" },
-  { label: "NanoBanana Pro", icon: "👔", color: "#8b5cf6", endpoint: "fal-ai/ideogram/v2" },
-  { label: "NanoBanana", icon: "☀️", color: "#ec4899", endpoint: "fal-ai/stable-diffusion-v3" },
-  { label: "Imagen 4", icon: "✨", color: "#06b6d4", endpoint: "fal-ai/imagen-3" },
-  { label: "Grok", icon: "🔥", color: "#ef4444", endpoint: "fal-ai/flux-dev" },
-];
 
 function ImageModelDropdown({ value, options, onChange, pricingMap }) {
   const [open, setOpen] = useState(false);
@@ -165,14 +156,14 @@ export default function AIImagePage() {
   const { setMobileOpen } = useSidebar();
 
   useEffect(() => {
-    const ids = imageModels.map(m => m.endpoint).join(",");
+    const ids = imageModels.map(m => m.fal_model).join(",");
     fetch(`/api/model-pricing?endpoint_ids=${ids}`)
       .then(r => r.json())
       .then(data => {
         if (data.prices) {
           const m = {};
-          for (const model of imageModels) {
-            if (data.prices[model.endpoint]) m[model.label] = data.prices[model.endpoint];
+          for (const mod of imageModels) {
+            if (data.prices[mod.fal_model]) m[mod.label] = data.prices[mod.fal_model];
           }
           setPricing(m);
         }
@@ -226,7 +217,7 @@ export default function AIImagePage() {
     try {
       const results = [];
       for (let i = 0; i < imageCount; i++) {
-        const modelId = selectedModel.endpoint;
+        const modelId = selectedModel.fal_model;
         if (!modelId) throw new Error(`Unknown model: ${selectedModel.label}`);
 
         const subRes = await fetch("/api/generate-image", {
