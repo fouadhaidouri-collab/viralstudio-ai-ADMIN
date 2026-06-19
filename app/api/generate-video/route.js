@@ -1,3 +1,5 @@
+import { getFalKey } from "@/lib/fal-key";
+
 const FAL_BASE = "https://queue.fal.run";
 
 const MODEL_PAYLOADS = {
@@ -47,12 +49,12 @@ const MODEL_PAYLOADS = {
 };
 
 export async function POST(request) {
-  const { prompt, modelId, aspectRatio } = await request.json();
-  const FAL_KEY = process.env.FAL_KEY;
-
-  if (!FAL_KEY) {
-    return Response.json({ error: "FAL_KEY not configured — add it to .env.local" }, { status: 500 });
+  const keyResult = await getFalKey();
+  if (!keyResult.hasKey) {
+    return Response.json({ error: keyResult.error, setupRequired: true }, { status: 200 });
   }
+
+  const { prompt, modelId, aspectRatio } = await request.json();
 
   const ratioMap = {
     "Cinematic 16:9": "16:9",
@@ -71,7 +73,7 @@ export async function POST(request) {
   const res = await fetch(`${FAL_BASE}/${modelId}`, {
     method: "POST",
     headers: {
-      Authorization: `Key ${FAL_KEY}`,
+      Authorization: `Key ${keyResult.key}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
@@ -87,17 +89,21 @@ export async function POST(request) {
 }
 
 export async function GET(request) {
+  const keyResult = await getFalKey();
+  if (!keyResult.hasKey) {
+    return Response.json({ error: keyResult.error, setupRequired: true }, { status: 200 });
+  }
+
   const { searchParams } = new URL(request.url);
   const requestId = searchParams.get("requestId");
   const modelId = searchParams.get("modelId");
-  const FAL_KEY = process.env.FAL_KEY;
 
   if (!requestId || !modelId) {
     return Response.json({ error: "Missing requestId or modelId" }, { status: 400 });
   }
 
   const statusRes = await fetch(`${FAL_BASE}/${modelId}/requests/${requestId}/status`, {
-    headers: { Authorization: `Key ${FAL_KEY}` },
+    headers: { Authorization: `Key ${keyResult.key}` },
   });
 
   if (!statusRes.ok) {
@@ -109,7 +115,7 @@ export async function GET(request) {
 
   if (statusData.status === "COMPLETED") {
     const resultRes = await fetch(`${FAL_BASE}/${modelId}/requests/${requestId}`, {
-      headers: { Authorization: `Key ${FAL_KEY}` },
+      headers: { Authorization: `Key ${keyResult.key}` },
     });
     const result = await resultRes.json();
     return Response.json({ status: "COMPLETED", videoUrl: result.video?.url || result.video_url, ...result });

@@ -9,12 +9,22 @@ import { SidebarProvider, useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
 import {
-  USD_TO_CREDIT, imageModels, imageAspectRatios, imageResolutions, imageModelCapabilities
+  imageModels, imageAspectRatios, imageResolutions, imageModelCapabilities
 } from "../lib/capabilities";
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
-function ImageModelDropdown({ value, options, onChange, pricingMap }) {
+const calcModelCredits = (unitPrice, quantity, settings) => {
+  if (unitPrice == null) return null;
+  const markup = settings?.default_markup_multiplier || 2.0;
+  const usdValue = settings?.credit_usd_value || 0.029;
+  const minCredits = settings?.minimum_generation_credits || 1;
+  const sellCost = unitPrice * quantity * markup;
+  const credits = Math.ceil(sellCost / usdValue);
+  return Math.max(credits, minCredits);
+};
+
+function ImageModelDropdown({ value, options, onChange, pricingMap, creditSettings }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -46,8 +56,8 @@ function ImageModelDropdown({ value, options, onChange, pricingMap }) {
             <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
             {(() => {
               const p = pricingMap?.[value.label];
-              const price = p ? p.unitPrice : 0;
-              return <span className="text-[9px] text-yellow-400 font-medium shrink-0">${price}</span>;
+              const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
+              return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">{c} cr</span>;
             })()}
           </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
@@ -72,9 +82,9 @@ function ImageModelDropdown({ value, options, onChange, pricingMap }) {
                   <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
                   {(() => {
                     const p = pricingMap?.[opt.label];
-                    const price = p ? p.unitPrice : 0;
-                    return (
-                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">${price}</span>
+                    const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
+                    return c != null && (
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{c} cr</span>
                     );
                   })()}
                   {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
@@ -150,10 +160,11 @@ export default function AIImagePage() {
   const [imageUrls, setImageUrls] = useState([]);
   const [imageError, setImageError] = useState(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-  const [credits] = useState(0);
+  const [credits, setCredits] = useState(0);
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [neededCredits, setNeededCredits] = useState(0);
   const [pricing, setPricing] = useState({});
+  const [creditSettings, setCreditSettings] = useState({ credit_usd_value: 0.029, default_markup_multiplier: 2.0, minimum_generation_credits: 1 });
   const fileInputRef = useRef();
   const [bgVideoIdx, setBgVideoIdx] = useState(0);
   const { setMobileOpen } = useSidebar();
@@ -170,6 +181,18 @@ export default function AIImagePage() {
           }
           setPricing(m);
         }
+      })
+      .catch(() => {});
+    fetch("/api/pricing/settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.credit_usd_value) setCreditSettings(data);
+      })
+      .catch(() => {});
+    fetch("/api/credits")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.balance != null) setCredits(data.balance);
       })
       .catch(() => {});
   }, []);
@@ -226,9 +249,8 @@ export default function AIImagePage() {
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
     const p = pricing?.[selectedModel.label];
-    const unitPrice = p ? p.unitPrice : 0;
-    const totalCost = unitPrice * USD_TO_CREDIT * imageCount;
-    if (credits < totalCost) { setNeededCredits(Math.ceil(totalCost)); setShowCreditModal(true); return; }
+    const needed = calcModelCredits(p?.unitPrice, imageCount, creditSettings);
+    if (needed != null && credits < needed) { setNeededCredits(needed); setShowCreditModal(true); return; }
     setGenerating(true);
     setImageUrls([]);
     setImageError(null);
@@ -348,7 +370,7 @@ export default function AIImagePage() {
               <div className="mt-auto pt-3 shrink-0 space-y-2">
                 <div>
                   <div className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1.5 font-medium">Model</div>
-                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} pricingMap={pricing}  />
+                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} pricingMap={pricing} creditSettings={creditSettings} />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
@@ -367,8 +389,9 @@ export default function AIImagePage() {
                     <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Generating...</>
                   ) : (
                     <><Icon name="auto_awesome" className="text-sm" /> Generate Image {(() => {
-                      const up = pricing?.[selectedModel.label]?.unitPrice || 0;
-                      return <span className="text-yellow-300/90">(${up * imageCount})</span>;
+                      const up = pricing?.[selectedModel.label]?.unitPrice;
+                      const c = calcModelCredits(up, imageCount, creditSettings);
+                      return c != null && <span className="text-yellow-300/90">({c} cr)</span>;
                     })()}</>
                   )}
                 </button>

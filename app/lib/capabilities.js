@@ -1,5 +1,3 @@
-export const USD_TO_CREDIT = 1000 / 29;
-
 export const videoAspectRatios = [
   { label: "Cinematic 16:9", icon: "crop_16_9" },
   { label: "Instagram 9:16", icon: "crop_portrait" },

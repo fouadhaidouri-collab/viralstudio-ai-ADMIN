@@ -10,7 +10,7 @@ import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
 import {
-  USD_TO_CREDIT, videoModels, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
+  videoModels, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
 } from "../lib/capabilities";
 
 const BASE_DURATION_SEC = 5;
@@ -23,7 +23,17 @@ const resolutionMultiplier = (r) => r === "1080p" ? 1.5 : 1;
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
-function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution }) {
+const calcModelCredits = (unitPrice, quantity, settings) => {
+  if (unitPrice == null) return null;
+  const markup = settings?.default_markup_multiplier || 2.0;
+  const usdValue = settings?.credit_usd_value || 0.029;
+  const minCredits = settings?.minimum_generation_credits || 1;
+  const sellCost = unitPrice * quantity * markup;
+  const credits = Math.ceil(sellCost / usdValue);
+  return Math.max(credits, minCredits);
+};
+
+function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution, creditSettings }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -56,8 +66,8 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
           <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
           {(() => {
             const p = pricingMap?.[value.label];
-            const price = p ? p.unitPrice : 0;
-            return <span className="text-[9px] text-yellow-400 font-medium shrink-0">${(price * durationMultiplier(duration) * resolutionMultiplier(resolution))}</span>;
+            const c = calcModelCredits(p?.unitPrice, durationMultiplier(duration) * resolutionMultiplier(resolution), creditSettings);
+            return c != null && <span className="text-[9px] text-yellow-400 font-medium shrink-0">{c} cr</span>;
           })()}
         </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
@@ -82,9 +92,9 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                   <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
                   {(() => {
                     const p = pricingMap?.[opt.label];
-                    const price = p ? p.unitPrice : 0;
-                    return (
-                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">${price}</span>
+                    const c = calcModelCredits(p?.unitPrice, 1, creditSettings);
+                    return c != null && (
+                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{c} cr</span>
                     );
                   })()}
                   {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
@@ -160,6 +170,7 @@ export default function AIVideoPage() {
   const [videoUrls, setVideoUrls] = useState([]);
   const [videoError, setVideoError] = useState(null);
   const [pricing, setPricing] = useState({});
+  const [creditSettings, setCreditSettings] = useState({ credit_usd_value: 0.029, default_markup_multiplier: 2.0, minimum_generation_credits: 1 });
   const [credits, setCredits] = useState(0);
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [neededCredits, setNeededCredits] = useState(0);
@@ -192,6 +203,18 @@ export default function AIVideoPage() {
           }
           setPricing(m);
         }
+      })
+      .catch(() => {});
+    fetch("/api/pricing/settings")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.credit_usd_value) setCreditSettings(data);
+      })
+      .catch(() => {});
+    fetch("/api/credits")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.balance != null) setCredits(data.balance);
       })
       .catch(() => {});
   }, []);
@@ -288,14 +311,12 @@ export default function AIVideoPage() {
     if (!prompt.trim()) return;
 
     const p = pricing?.[model.label];
-    const unitPrice = p ? p.unitPrice : 0;
-    if (unitPrice) {
-      const totalCost = unitPrice * videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution) * USD_TO_CREDIT;
-      if (credits < totalCost) {
-        setNeededCredits(Math.ceil(totalCost));
-        setShowCreditModal(true);
-        return;
-      }
+    const quantity = videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution);
+    const needed = calcModelCredits(p?.unitPrice, quantity, creditSettings);
+    if (needed != null && credits < needed) {
+      setNeededCredits(needed);
+      setShowCreditModal(true);
+      return;
     }
 
     setGenerating(true);
@@ -340,7 +361,7 @@ export default function AIVideoPage() {
         <div className="flex items-center gap-3 md:gap-6">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
             <Icon name="bolt" className="text-sm text-yellow-400" />
-            <span className="text-sm font-bold text-yellow-400">0</span>
+            <span className="text-sm font-bold text-yellow-400">{credits}</span>
             <button onClick={() => router.push("/pricing")} className="ml-1 w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
               <Icon name="add" className="text-[10px] text-yellow-400" />
             </button>
@@ -383,7 +404,7 @@ export default function AIVideoPage() {
               )}
 
               <div className="mt-auto pt-3 shrink-0 space-y-2">
-                <ModelDropdown label="AI Model" value={model} options={videoModels} onChange={setModel} compact pricingMap={pricing} duration={currentConfig.duration} resolution={currentConfig.resolution}  />
+                <ModelDropdown label="AI Model" value={model} options={videoModels} onChange={setModel} compact pricingMap={pricing} duration={currentConfig.duration} resolution={currentConfig.resolution} creditSettings={creditSettings} />
                 <div className={`grid grid-cols-2 gap-2 ${availableAspectRatios.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
                   {availableAspectRatios.length > 0 && (
                     <Dropdown label="Aspect Ratio" value={currentConfig.aspectRatio.label} options={availableAspectRatios} onChange={(v) => updateConfig("aspectRatio", v)} compact />
@@ -403,8 +424,9 @@ export default function AIVideoPage() {
                   ) : (
                     <><Icon name="auto_videocam" className="text-sm" /> Generate Video {(() => {
                       const p = pricing?.[model.label];
-                      const price = p ? p.unitPrice : 0;
-                      return <span className="text-yellow-300/90">(${(price * videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution))})</span>;
+                      const quantity = videoCount * durationMultiplier(currentConfig.duration) * resolutionMultiplier(currentConfig.resolution);
+                      const c = calcModelCredits(p?.unitPrice, quantity, creditSettings);
+                      return c != null && <span className="text-yellow-300/90">({c} cr)</span>;
                     })()}</>
                 )}
                 </button>
