@@ -8,6 +8,7 @@ import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider } from "../components/SidebarContext";
 import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
+import Icon from "../components/Icon";
 
 const USD_TO_CREDIT = 1000 / 29;
 const BASE_DURATION_SEC = 5;
@@ -83,7 +84,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
         className={`w-full flex items-center justify-between gap-1.5 bg-surface-container-lowest border border-surface-border rounded-xl hover:border-primary/50 transition-all ${compact ? 'px-2 py-1' : 'px-3.5 py-3 text-sm'}`}
       >
         <span className="flex items-center gap-1.5 truncate min-w-0">
-          <span className="material-symbols-outlined text-sm flex-shrink-0" style={{ color: value.color }}>{value.icon}</span>
+          <Icon name={value.icon} className="text-sm flex-shrink-0" style={{ color: value.color }} />
           <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
           {(() => {
             const p = pricingMap?.[value.label];
@@ -91,7 +92,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
             return price ? <span className="text-[9px] text-yellow-400 font-medium shrink-0">{(price * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)}</span> : null;
           })()}
         </span>
-        <span className={`material-symbols-outlined text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>expand_more</span>
+        <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && typeof document !== "undefined" && createPortal(
           <div
@@ -111,7 +112,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                   onMouseEnter={(e) => { if (!selected) e.currentTarget.style.background = "rgba(255,255,255,0.04)"; }}
                   onMouseLeave={(e) => { if (!selected) e.currentTarget.style.background = "transparent"; }}
                 >
-                  <span className="material-symbols-outlined text-base flex-shrink-0" style={{ color: opt.color }}>{opt.icon}</span>
+                  <Icon name={opt.icon} className="text-base flex-shrink-0" style={{ color: opt.color }} />
                   <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
                   {(() => {
                     const p = pricingMap?.[opt.label];
@@ -121,7 +122,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                       <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)}</span>
                     ) : null;
                   })()}
-                  {selected && <span className="material-symbols-outlined text-xs ml-auto text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>}
+                  {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
                 </button>
               );
             })}
@@ -154,12 +155,12 @@ function Dropdown({ label, value, options, onChange, compact }) {
           {(() => {
             const match = options.find(o => (typeof o === "string" ? o : o.label) === value);
             if (match && typeof match !== "string") {
-              return <><span className="material-symbols-outlined text-sm" style={{color: match.color || "#d2bbff"}}>{match.icon}</span>{value}</>;
+              return <><Icon name={match.icon} className="text-sm" style={{color: match.color || "#d2bbff"}} />{value}</>;
             }
             return value;
           })()}
         </span>
-        <span className={`material-symbols-outlined text-sm text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}>expand_more</span>
+        <Icon name="expand_more" className={`text-sm text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="absolute bottom-full left-0 right-0 mb-1 bg-surface-container border border-surface-border rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto py-1">
@@ -169,7 +170,7 @@ function Dropdown({ label, value, options, onChange, compact }) {
               onClick={() => { onChange(opt); setOpen(false); }}
               className={`w-full text-left px-3 py-2 text-sm hover:bg-surface-container-high transition-colors flex items-center gap-2 ${value === (typeof opt === "string" ? opt : opt.label) ? "text-primary bg-primary/5" : "text-on-surface"}`}
             >
-              {typeof opt !== "string" && <span className="material-symbols-outlined text-base" style={{color: opt.color || "#d2bbff"}}>{opt.icon}</span>}
+              {typeof opt !== "string" && <Icon name={opt.icon} className="text-base" style={{color: opt.color || "#d2bbff"}} />}
               {typeof opt === "string" ? opt : opt.label}
             </button>
           ))}
@@ -331,14 +332,14 @@ export default function AIVideoPage() {
       </div>
       <header className="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] h-14 md:h-16 bg-surface/70 backdrop-blur-xl border-b border-surface-border/50 z-40 flex items-center justify-between md:justify-end px-4 md:px-8" style={{ boxShadow: '0 1px 20px rgba(0,0,0,0.3)' }}>
         <button onClick={() => setMobileOpen(true)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low border border-surface-border/50 hover:bg-surface-container-high transition-all active:scale-90">
-          <span className="material-symbols-outlined text-white text-xl">menu</span>
+          <Icon name="menu" className="text-white text-xl" />
         </button>
         <div className="flex items-center gap-3 md:gap-6">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
-            <span className="material-symbols-outlined text-sm text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+            <Icon name="bolt" className="text-sm text-yellow-400" />
             <span className="text-sm font-bold text-yellow-400">0</span>
             <button onClick={() => router.push("/pricing")} className="ml-1 w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
-              <span className="material-symbols-outlined text-[10px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+              <Icon name="add" className="text-[10px] text-yellow-400" />
             </button>
           </div>
           <div className="h-8 w-px bg-surface-border"></div>
@@ -360,7 +361,7 @@ export default function AIVideoPage() {
 
               <div className="flex flex-wrap gap-2 mt-4 shrink-0">
                 <button onClick={() => fileInputRef.current.click()} className="flex items-center gap-1.5 px-3.5 py-2 bg-surface-container-low border border-surface-border/60 rounded-xl text-xs font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-95" style={{ fontFamily: 'Geist, sans-serif' }}>
-                  <span className="material-symbols-outlined text-base">image</span> Add image(s)
+                  <Icon name="image" className="text-base" /> Add image(s)
                 </button>
                 <input ref={fileInputRef} type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" />
               </div>
@@ -371,7 +372,7 @@ export default function AIVideoPage() {
                     <div key={i} className="relative w-20 h-20 rounded-lg overflow-hidden border border-surface-border group">
                       <img src={img} alt={`Upload ${i + 1}`} className="w-full h-full object-cover" />
                       <button onClick={() => removeImage(i)} className="absolute top-0.5 right-0.5 w-5 h-5 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <span className="material-symbols-outlined text-xs text-white">close</span>
+                        <Icon name="close" className="text-xs text-white" />
                       </button>
                     </div>
                   ))}
@@ -395,7 +396,7 @@ export default function AIVideoPage() {
                   {generating ? (
                     <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Generating...</>
                   ) : (
-                    <><span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>auto_videocam</span> Generate Video {(() => {
+                    <><Icon name="auto_videocam" className="text-sm" /> Generate Video {(() => {
                       const p = pricing?.[model.label];
                       const price = p ? p.unitPrice : model.fallbackPrice;
                       return price ? <span className="text-yellow-300/90">({(price * videoCount * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)} credits)</span> : null;
@@ -411,7 +412,7 @@ export default function AIVideoPage() {
           {videoUrls.length > 0 && (
             <div className="xl:col-span-2 glass-card rounded-xl p-4 border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold flex items-center gap-2"><span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>checklist</span> Generated Videos ({videoUrls.length})</h3>
+                <h3 className="text-sm font-semibold flex items-center gap-2"><Icon name="checklist" className="text-primary text-base" /> Generated Videos ({videoUrls.length})</h3>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {videoUrls.map((url, i) => (
@@ -419,7 +420,7 @@ export default function AIVideoPage() {
                     <video src={url} controls className="w-full aspect-video object-contain bg-black" />
                     <div className="p-2 flex items-center justify-between">
                       <span className="text-[10px] font-medium text-on-surface-variant">Video {i + 1}</span>
-                      <a href={url} download className="text-primary text-[10px] flex items-center gap-1 hover:underline"><span className="material-symbols-outlined text-xs">download</span> DL</a>
+                      <a href={url} download className="text-primary text-[10px] flex items-center gap-1 hover:underline"><Icon name="download" className="text-xs" /> DL</a>
                     </div>
                   </div>
                 ))}
@@ -440,7 +441,7 @@ export default function AIVideoPage() {
                 <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
                   <div className="relative mb-5 mx-auto w-fit">
                     <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center animate-pulse mx-auto">
-                      <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>hourglass_top</span>
+                      <Icon name="hourglass_top" className="text-primary text-3xl" />
                     </div>
                     <div className="absolute inset-0 border-2 border-primary/30 rounded-full animate-ping"></div>
                   </div>
@@ -450,7 +451,7 @@ export default function AIVideoPage() {
               ) : videoError ? (
                 <div className="flex-1 flex flex-col items-center justify-center text-center p-8">
                   <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-5">
-                    <span className="material-symbols-outlined text-red-400 text-3xl">error_outline</span>
+                    <Icon name="error_outline" className="text-red-400 text-3xl" />
                   </div>
                   <h3 className="text-xl font-semibold mb-1 text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Generation Failed</h3>
                   <p className="text-sm text-red-400/80">{videoError}</p>
@@ -460,7 +461,7 @@ export default function AIVideoPage() {
                   <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)' }} />
                   <div className="relative z-10 flex flex-col items-center">
                     <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center animate-pulse mb-4">
-                      <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                      <Icon name="play_circle" className="text-primary text-3xl" />
                     </div>
                   </div>
                 </div>
@@ -469,13 +470,13 @@ export default function AIVideoPage() {
 
             <div className="flex items-center gap-3">
               <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <span className="material-symbols-outlined text-base">download</span> Download
+                <Icon name="download" className="text-base" /> Download
               </button>
               <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <span className="material-symbols-outlined text-base">share</span> Share
+                <Icon name="share" className="text-base" /> Share
               </button>
               <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm font-medium hover:bg-surface-container-high hover:border-primary/30 transition-all duration-200 active:scale-[0.97]" style={{ fontFamily: 'Geist, sans-serif' }}>
-                <span className="material-symbols-outlined text-base">replay</span> Regenerate
+                <Icon name="replay" className="text-base" /> Regenerate
               </button>
             </div>
 

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider, useSidebar } from "../components/SidebarContext";
+import Icon from "../components/Icon";
 
 export default function UGCFEnginePage() {
   const router = useRouter();
@@ -25,17 +26,17 @@ export default function UGCFEnginePage() {
       <header className="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] h-14 md:h-16 bg-surface/70 backdrop-blur-xl border-b border-surface-border/50 flex justify-between items-center px-4 md:px-8 z-40" style={{ boxShadow: '0 1px 20px rgba(0,0,0,0.3)' }}>
         <div className="md:hidden">
           <button onClick={() => setMobileOpen(true)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low border border-surface-border/50 hover:bg-surface-container-high transition-all active:scale-90">
-            <span className="material-symbols-outlined text-white text-xl">menu</span>
+            <Icon name="menu" className="text-white text-xl" />
           </button>
         </div>
         <div className="flex items-center gap-4 flex-1 hidden md:flex"></div>
         <div className="flex items-center gap-3 md:gap-6">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
-              <span className="material-symbols-outlined text-sm text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              <Icon name="bolt" className="text-sm text-yellow-400" />
               <span className="text-sm font-bold text-yellow-400">0</span>
               <button onClick={() => router.push("/pricing")} className="ml-1 w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
-                <span className="material-symbols-outlined text-[10px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+                <Icon name="add" className="text-[10px] text-yellow-400" />
               </button>
             </div>
           </div>
@@ -71,7 +72,7 @@ export default function UGCFEnginePage() {
                 <div className="relative">
                   <input className="w-full bg-surface-container-low border border-surface-border/60 rounded-xl px-3.5 py-2.5 text-sm text-on-surface focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-all duration-200 outline-none pr-12 placeholder:text-on-surface-variant/40" placeholder="Stop scrolling if you want 2x more energy..." type="text" />
                   <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-primary hover:bg-primary/10 rounded-lg transition-all duration-200">
-                    <span className="material-symbols-outlined text-lg">auto_awesome</span>
+                    <Icon name="auto_awesome" className="text-lg" />
                   </button>
                 </div>
               </div>
@@ -88,14 +89,14 @@ export default function UGCFEnginePage() {
                   <div className="grid grid-cols-1 gap-2">
                     <button className="flex items-center justify-between px-3.5 py-2.5 bg-surface-container-low border border-primary/50 rounded-xl text-on-surface text-sm shadow-lg shadow-primary/5">
                       <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>female</span>
+                        <Icon name="female" className="text-primary" />
                         <span>Jessica (US Female)</span>
                       </div>
-                      <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                      <Icon name="check_circle" className="text-primary" />
                     </button>
                     <button className="flex items-center justify-between px-3.5 py-2.5 bg-surface-container-low border border-surface-border/60 rounded-xl text-on-surface-variant text-sm hover:border-primary/30 hover:bg-surface-container transition-all duration-200 active:scale-[0.98]">
                       <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined">male</span>
+                        <Icon name="male" className="" />
                         <span>Marcus (US Male)</span>
                       </div>
                     </button>
@@ -126,9 +127,9 @@ export default function UGCFEnginePage() {
                 style={{ fontFamily: 'Geist, sans-serif' }}
               >
                 {generating ? (
-                  <><span className="material-symbols-outlined animate-spin" style={{ fontVariationSettings: "'FILL' 1" }}>refresh</span> Synthesizing Content...</>
+                  <><Icon name="refresh" className="animate-spin" /> Synthesizing Content...</>
                 ) : (
-                  <><span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span> Generate AI UGC Ad</>
+                  <><Icon name="bolt" /> Generate AI UGC Ad</>
                 )}
               </button>
             </div>
@@ -137,8 +138,8 @@ export default function UGCFEnginePage() {
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold" style={{ fontFamily: 'Geist, sans-serif' }}>Live Preview</h3>
               <div className="flex gap-2">
-                <button className="p-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-90"><span className="material-symbols-outlined text-sm">smartphone</span></button>
-                <button className="p-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-90"><span className="material-symbols-outlined text-sm">tv</span></button>
+                <button className="p-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-90"><Icon name="smartphone" className="text-sm" /></button>
+                <button className="p-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-90"><Icon name="tv" className="text-sm" /></button>
               </div>
             </div>
             <div className="relative mx-auto w-full max-w-[280px] aspect-[9/16] rounded-[1.5rem] border-[5px] border-surface-card bg-black overflow-hidden shadow-2xl ring-1 ring-surface-border flex-shrink-0">
@@ -151,21 +152,21 @@ export default function UGCFEnginePage() {
                     </div>
                     <p className="text-[11px] text-white/90 leading-tight max-w-[180px]">Check out this amazing new hydrate mix! Honestly changed my morning routine. #wellness #ads #ugc</p>
                     <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[10px] text-white">music_note</span>
+                      <Icon name="music_note" className="text-[10px] text-white" />
                       <span className="text-[10px] text-white">Original Sound - ViralStudio AI</span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-4 items-center">
                     <div className="flex flex-col items-center gap-1">
-                      <span className="material-symbols-outlined text-white text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>favorite</span>
+                      <Icon name="favorite" className="text-white text-2xl" />
                       <span className="text-[10px] text-white">12.4K</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <span className="material-symbols-outlined text-white text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>chat_bubble</span>
+                      <Icon name="chat_bubble" className="text-white text-2xl" />
                       <span className="text-[10px] text-white">452</span>
                     </div>
                     <div className="flex flex-col items-center gap-1">
-                      <span className="material-symbols-outlined text-white text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>share</span>
+                      <Icon name="share" className="text-white text-2xl" />
                       <span className="text-[10px] text-white">Share</span>
                     </div>
                   </div>
@@ -177,7 +178,7 @@ export default function UGCFEnginePage() {
               <div className="absolute inset-0 z-10 flex items-center justify-center">
                 <img className="absolute inset-0 w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD737pw0Cp_tksGQ_4lcGHlz2erv3CdzZNY7KnHtrbgATzzQwjJXOmFR3NLFq08jF3iiHDL6imJlAA53yAdriR-LVsKP5b4tslXgYsWDZ3AYNsrGiMPp0hod8wODFSV8KJJH9le2CtTvEf3NfPPwcKLwZbvmoNnQF7N_SKqxJaC3eJepdYd0EBa2IITyHuxVOsLq5qwEjGpBJ7oCZAjf6wWXuFPf_rM6tN6AFRqIkwd9GnNlg8sed8uRLRBv6MlswahF9GrmlisrQ" alt="Preview" />
                 <button className="z-30 w-16 h-16 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center group hover:bg-white/20 transition-all">
-                  <span className="material-symbols-outlined text-white text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+                  <Icon name="play_arrow" className="text-white text-3xl" />
                 </button>
               </div>
             </div>
@@ -195,16 +196,16 @@ export default function UGCFEnginePage() {
                   <div className="h-full bg-primary w-[65%] shimmer-border"></div>
                 </div>
               </div>
-              <button className="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant"><span className="material-symbols-outlined">close</span></button>
+              <button className="p-2 hover:bg-white/5 rounded-lg text-on-surface-variant"><Icon name="close" /></button>
             </div>
             <div className="flex flex-col gap-3">
               <label className="text-sm font-medium text-on-surface-variant uppercase tracking-widest" style={{ fontFamily: 'Geist, sans-serif' }}>Quick Export</label>
               <div className="grid grid-cols-2 gap-2">
                 <button className="flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-[0.97]">
-                  <span className="material-symbols-outlined text-sm">download</span> HD MP4
+                  <Icon name="download" className="text-sm" /> HD MP4
                 </button>
                 <button className="flex items-center justify-center gap-2 py-3 bg-surface-container-low border border-surface-border/60 rounded-xl text-sm hover:bg-surface-container hover:border-primary/30 transition-all duration-200 active:scale-[0.97]">
-                  <span className="material-symbols-outlined text-sm">send</span> TikTok Ads
+                  <Icon name="send" className="text-sm" /> TikTok Ads
                 </button>
               </div>
             </div>

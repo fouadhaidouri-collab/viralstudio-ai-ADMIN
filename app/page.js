@@ -6,6 +6,7 @@ import Link from "next/link";
 import Sidebar from "./components/Sidebar";
 import TopBar from "./components/TopBar";
 import { SidebarProvider } from "./components/SidebarContext";
+import Icon from "./components/Icon";
 
 
 const templates = Array.from({ length: 11 }, (_, i) => ({
@@ -110,7 +111,7 @@ export default function Dashboard() {
             <div className="relative z-20 p-6 md:p-10 pb-16 md:pb-28 w-full max-w-4xl">
               <h2 className="text-2xl md:text-4xl font-bold mb-3 leading-tight tracking-tight text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Create Viral Content With AI</h2>
               <Link href="/ai-video" className="inline-flex items-center gap-3 primary-gradient text-white px-6 md:px-8 py-3 md:py-4 rounded-2xl font-medium hover:scale-105 active:scale-[1.02] transition-all duration-200 shadow-xl shadow-primary/30 animate-pulse-glow tap-target">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+                <Icon name="bolt" size={16} />
                 Generate Content
               </Link>
             </div>
@@ -126,7 +127,7 @@ export default function Dashboard() {
                   </div>
                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="w-8 h-8 rounded-full primary-gradient flex items-center justify-center shadow-lg">
-                      <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
+                      <Icon name="play_arrow" className="text-white" size={14} />
                     </span>
                   </div>
                 </div>
@@ -138,14 +139,14 @@ export default function Dashboard() {
               <Link key={f.href} href={f.href} className="glass-card p-5 rounded-2xl flex flex-col group min-h-[200px] glass-card-hover card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
                 <div className="flex justify-between items-start mb-4">
                   <div className={`w-12 h-12 rounded-xl ${f.bg} flex items-center justify-center ${f.color} shadow-lg icon-glow`}>
-                    <span className="material-symbols-outlined text-3xl">{f.icon}</span>
+                    <Icon name={f.icon} size={28} />
                   </div>
-                  <span className="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-all duration-300 text-primary -translate-x-2 group-hover:translate-x-0">north_east</span>
+                  <Icon name="north_east" className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-primary -translate-x-2 group-hover:translate-x-0" size={16} />
                 </div>
                 <h3 className="text-2xl font-semibold mb-2 text-white" style={{ fontFamily: 'Geist, sans-serif' }}>{f.title}</h3>
                 <p className="text-sm text-on-surface-variant flex-1">{f.desc}</p>
                 <div className={`mt-auto pt-3 ${f.color} text-sm font-medium flex items-center gap-2 group-hover:gap-3 transition-all duration-200`} style={{ fontFamily: 'Geist, sans-serif' }}>
-                  {f.btn} <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  {f.btn} <Icon name="arrow_forward" size={14} />
                 </div>
               </Link>
             ))}
@@ -159,7 +160,7 @@ export default function Dashboard() {
           <section className="mt-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold flex items-center gap-2 text-white">
-                <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>history</span>
+                <Icon name="history" className="text-primary" size={16} />
                 Featured Templates
               </h3>
               <Link href="/ai-video" className="text-xs text-primary hover:text-primary/80 font-medium hover:underline underline-offset-4 transition-all">View all</Link>

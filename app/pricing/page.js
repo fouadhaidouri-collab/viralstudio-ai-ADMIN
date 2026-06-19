@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider, useSidebar } from "../components/SidebarContext";
+import Icon from "../components/Icon";
 
 const DISCOUNT = 0.30;
 
@@ -120,13 +121,13 @@ export default function PricingPage() {
         <div className="px-3 md:px-5 lg:px-6 py-4 md:py-5 lg:py-6 relative z-10">
           <div className="flex justify-between md:justify-end items-center gap-4 mb-6">
             <button onClick={() => setMobileOpen(true)} className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low border border-surface-border/50 hover:bg-surface-container-high transition-all active:scale-90">
-              <span className="material-symbols-outlined text-white text-xl">menu</span>
+              <Icon name="menu" className="text-white text-xl" />
             </button>
             <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
-              <span className="material-symbols-outlined text-sm text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              <Icon name="bolt" className="text-sm text-yellow-400" />
               <span className="text-sm font-bold text-yellow-400">0</span>
               <button onClick={() => router.push("/pricing")} className="w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
-                <span className="material-symbols-outlined text-[10px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+                <Icon name="add" className="text-[10px] text-yellow-400" />
               </button>
             </div>
             <ProfileDropdown />
@@ -134,7 +135,7 @@ export default function PricingPage() {
 
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-primary/10 rounded-full border border-primary/20 mb-4">
-              <span className="material-symbols-outlined text-[12px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+              <Icon name="auto_awesome" className="text-[12px] text-primary" />
               <span className="text-[11px] text-primary font-semibold tracking-wide">Annual pricing (save up to 40%)</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight leading-tight">
@@ -234,7 +235,7 @@ export default function PricingPage() {
                     {plan.features.map((f, i) => (
                       <div key={i} className="flex items-start gap-2.5 group/feature">
                         <div className="w-4 h-4 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5 group-hover/feature:bg-primary/20 transition-colors">
-                          <span className="material-symbols-outlined text-[10px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
+                          <Icon name="check" className="text-[10px] text-primary" />
                         </div>
                         <span className="text-[12px] text-on-surface-variant/90 group-hover/feature:text-on-surface transition-colors">{f}</span>
                       </div>

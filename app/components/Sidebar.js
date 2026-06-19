@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
+import Icon from "./Icon";
 
 const homeItem = { href: "/", label: "Dashboard", icon: "dashboard" };
 const toolItems = [
@@ -26,7 +27,7 @@ function SidebarContent() {
         <div className="relative">
           <div className="absolute inset-0 rounded-xl blur-xl bg-primary/40 animate-pulse-glow" />
           <div className="w-11 h-11 rounded-[14px] flex items-center justify-center shrink-0 relative z-10" style={{ background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #3b0764 100%)', boxShadow: '0 0 30px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' }}>
-            <span className="material-symbols-outlined text-white text-xl drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+            <Icon name="bolt" className="text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" size={20} />
           </div>
         </div>
         <div>
@@ -48,9 +49,7 @@ function SidebarContent() {
               : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
           }`}
         >
-          <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: pathname === homeItem.href ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
-            {homeItem.icon}
-          </span>
+          <Icon name={homeItem.icon} className="shrink-0" size={20} />
           <span className="sidebar-link-text flex-1">{homeItem.label}</span>
         </Link>
         <div className="pt-3 pb-1 px-4">
@@ -69,9 +68,7 @@ function SidebarContent() {
                   : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
               }`}
             >
-              <span className="material-symbols-outlined shrink-0" style={{ fontVariationSettings: isActive ? "'FILL' 1, 'wght' 300" : "'FILL' 0, 'wght' 300", fontSize: '20px' }}>
-                {item.icon}
-              </span>
+              <Icon name={item.icon} className="shrink-0" size={20} />
               <span className="sidebar-link-text flex-1">{item.label}</span>
             </Link>
           );
@@ -80,7 +77,7 @@ function SidebarContent() {
       <div className="mt-auto pt-4 border-t border-surface-border/40 px-2">
         <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-surface-container-low border border-surface-border/40" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-accent-cyan to-primary flex items-center justify-center shrink-0">
-            <span className="material-symbols-outlined text-white text-[12px]" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+            <Icon name="auto_awesome" className="text-white" size={12} />
           </div>
           <span className="sidebar-credits-text">AI Credits: <span className="text-yellow-400 font-bold">0</span></span>
         </div>

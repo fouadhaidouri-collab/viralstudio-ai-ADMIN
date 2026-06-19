@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import { SidebarProvider } from "../components/SidebarContext";
+import Icon from "../components/Icon";
 
 
 const stats = [
@@ -84,28 +85,28 @@ export default function ProfilePage() {
             <div className="relative z-20 p-6 lg:p-8 flex items-center gap-6">
               <div className="w-20 h-20 rounded-full p-[2px] shadow-xl shadow-primary/30 shrink-0" style={{ background: 'linear-gradient(135deg, #a855f7, #6366f1)' }}>
                 <div className="w-full h-full rounded-full bg-surface flex items-center justify-center">
-                  <span className="material-symbols-outlined text-primary text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
+                  <Icon name="person" className="text-primary text-4xl" />
                 </div>
               </div>
               <div className="flex-1">
                 <h1 className="text-2xl font-bold text-white mb-1" style={{ fontFamily: 'Geist, sans-serif' }}>Alex Rivera</h1>
                 <div className="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">workspace_premium</span> Pro Plan
+                    <Icon name="workspace_premium" className="text-xs" /> Pro Plan
                   </span>
                   <span className="w-1 h-1 rounded-full bg-on-surface-variant/30"></span>
                   <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">calendar_month</span> Member since Jan 2025
+                    <Icon name="calendar_month" className="text-xs" /> Member since Jan 2025
                   </span>
                   <span className="w-1 h-1 rounded-full bg-on-surface-variant/30"></span>
                   <span className="flex items-center gap-1 text-yellow-400">
-                    <span className="material-symbols-outlined text-xs">bolt</span> 12,400 Credits
+                    <Icon name="bolt" className="text-xs" /> 12,400 Credits
                   </span>
                 </div>
               </div>
               <button className="primary-gradient text-white px-5 py-2.5 rounded-xl text-sm font-semibold shadow-lg shadow-primary/25 transition-all duration-200 hover:translate-y-[-1px] active:scale-[0.97]">
                 <span className="flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>edit</span> Edit Profile
+                  <Icon name="edit" className="text-sm" /> Edit Profile
                 </span>
               </button>
             </div>
@@ -115,7 +116,7 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
             {stats.map((stat) => (
               <div key={stat.label} className="glass-card rounded-2xl p-4 border border-white/5 flex flex-col items-center text-center card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
-                <span className={`material-symbols-outlined text-2xl ${stat.color} mb-2`} style={{ fontVariationSettings: "'FILL' 1" }}>{stat.icon}</span>
+                <Icon name={stat.icon} className={`text-2xl ${stat.color} mb-2`} />
                 <p className="text-xl font-bold text-white" style={{ fontFamily: 'Geist, sans-serif' }}>{stat.value}</p>
                 <p className="text-[10px] text-on-surface-variant uppercase tracking-widest mt-0.5">{stat.label}</p>
               </div>
@@ -131,13 +132,13 @@ export default function ProfilePage() {
               {/* Recent Activity */}
               <div className="glass-card rounded-2xl p-5 border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
                 <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2" style={{ fontFamily: 'Geist, sans-serif' }}>
-                  <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>history</span> Recent Activity
+                  <Icon name="history" className="text-primary text-base" /> Recent Activity
                 </h2>
                 <div className="space-y-0">
                   {recentActivity.map((item, i) => (
                     <div key={i} className="flex items-start gap-3 py-3 border-b border-white/5 last:border-b-0">
                       <div className={`w-9 h-9 rounded-xl bg-surface-container-low flex items-center justify-center ${item.color} shrink-0`}>
-                        <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>{item.icon}</span>
+                        <Icon name={item.icon} className="text-sm" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white">{item.action}</p>
@@ -153,12 +154,12 @@ export default function ProfilePage() {
               <div className="glass-card rounded-2xl p-5 border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-lg font-semibold text-white flex items-center gap-2" style={{ fontFamily: 'Geist, sans-serif' }}>
-                    <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>reviews</span> Feedback & Reviews
+                    <Icon name="reviews" className="text-primary text-base" /> Feedback & Reviews
                     <span className="px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[9px] font-bold">{feedbackData.length}</span>
                   </h2>
                   <div className="flex items-center gap-1">
                     {[1,2,3,4,5].map(i => (
-                      <span key={i} className="material-symbols-outlined text-yellow-400 text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <Icon key={i} name="star" className="text-yellow-400 text-sm" />
                     ))}
                     <span className="text-xs text-on-surface-variant ml-1">4.8 avg</span>
                   </div>
@@ -168,7 +169,7 @@ export default function ProfilePage() {
                     <div key={i} className="glass-card rounded-xl p-4 border border-white/5 hover:border-primary/20 transition-all duration-200">
                       <div className="flex items-center gap-1 mb-2">
                         {Array.from({ length: 5 }, (_, j) => (
-                          <span key={j} className={`material-symbols-outlined text-[10px] ${j < fb.rating ? 'text-yellow-400' : 'text-surface-border'}`} style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <Icon key={j} name="star" className={`text-[10px] ${j < fb.rating ? 'text-yellow-400' : 'text-surface-border'}`} />
                         ))}
                       </div>
                       <p className="text-xs text-on-surface-variant/80 leading-relaxed mb-2">&ldquo;{fb.text}&rdquo;</p>
@@ -191,13 +192,13 @@ export default function ProfilePage() {
             <div className="space-y-6">
               <div className="glass-card rounded-2xl p-5 border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
                 <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2" style={{ fontFamily: 'Geist, sans-serif' }}>
-                  <span className="material-symbols-outlined text-primary text-base" style={{ fontVariationSettings: "'FILL' 1" }}>settings</span> Account Settings
+                  <Icon name="settings" className="text-primary text-base" /> Account Settings
                 </h2>
                 <div className="space-y-3">
                   {accountSettings.map((setting, i) => (
                     <div key={i} className="flex items-start gap-3 pb-3 border-b border-white/5 last:border-b-0 last:pb-0">
                       <div className="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant shrink-0">
-                        <span className="material-symbols-outlined text-sm">{setting.icon}</span>
+                        <Icon name={setting.icon} className="text-sm" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">{setting.label}</p>
@@ -207,17 +208,17 @@ export default function ProfilePage() {
                   ))}
                 </div>
                 <button className="w-full mt-4 btn-subtle text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-sm">edit</span> Edit Settings
+                  <Icon name="edit" className="text-sm" /> Edit Settings
                 </button>
               </div>
 
               <div className="glass-card rounded-2xl p-5 border border-white/5 card-glow" style={{ background: 'linear-gradient(135deg, rgba(168,85,247,0.05), rgba(6,182,212,0.02))' }}>
                 <h2 className="text-lg font-semibold text-white mb-3 flex items-center gap-2" style={{ fontFamily: 'Geist, sans-serif' }}>
-                  <span className="material-symbols-outlined text-yellow-400 text-base" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span> Current Plan
+                  <Icon name="workspace_premium" className="text-yellow-400 text-base" /> Current Plan
                 </h2>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-12 h-12 rounded-xl primary-gradient flex items-center justify-center shadow-lg shadow-primary/30">
-                    <span className="material-symbols-outlined text-white text-2xl" style={{ fontVariationSettings: "'FILL' 1" }}>workspace_premium</span>
+                    <Icon name="workspace_premium" className="text-white text-2xl" />
                   </div>
                   <div>
                     <p className="text-lg font-bold text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Professional</p>
@@ -227,7 +228,7 @@ export default function ProfilePage() {
                 <div className="space-y-2 mb-4">
                   {["600 min of video/month", "12,000 AI credits/year", "20 GB storage", "Voice cloning", "Priority support"].map((f, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <span className="material-symbols-outlined text-[10px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
+                      <Icon name="check" className="text-[10px] text-primary" />
                       <span className="text-xs text-on-surface-variant">{f}</span>
                     </div>
                   ))}

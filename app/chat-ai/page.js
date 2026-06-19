@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import { SidebarProvider } from "../components/SidebarContext";
+import Icon from "../components/Icon";
 
 const MODEL_OPTIONS = [
   { label: "Auto (recommended)", value: "openrouter/free", desc: "Best free model available" },
@@ -29,7 +30,7 @@ function Markdown({ content }) {
             <div className="relative group my-3">
               <pre className="bg-surface-container-high border border-surface-border rounded-xl p-4 overflow-x-auto text-xs font-mono leading-relaxed"><code className={className} {...props}>{children}</code></pre>
               <button onClick={() => navigator.clipboard.writeText(String(children).replace(/\n$/, ""))} className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 bg-surface-container-low border border-surface-border rounded flex items-center justify-center hover:bg-surface-container-high">
-                <span className="material-symbols-outlined text-[10px] text-on-surface-variant">content_copy</span>
+                <Icon name="content_copy" className="text-[10px] text-on-surface-variant" />
               </button>
             </div>
           );
@@ -314,7 +315,7 @@ export default function ChatAIPage() {
             <div className="flex items-center justify-between px-6 lg:px-8 py-4 border-b border-surface-border/40 shrink-0">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl primary-gradient flex items-center justify-center shadow-lg shadow-primary/30">
-                  <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
+                  <Icon name="chat" className="text-white text-lg" />
                 </div>
                 <div>
                   <h1 className="text-lg font-bold text-white" style={{ fontFamily: 'Geist, sans-serif' }}>Chat AI</h1>
@@ -325,18 +326,18 @@ export default function ChatAIPage() {
                 {visibleMessages.length > 1 && (
                   <>
                     <button onClick={exportConversation} className="flex items-center gap-1 px-3 py-1.5 text-[10px] text-on-surface-variant/60 hover:text-primary transition-colors hover:bg-primary/5 rounded-lg">
-                      <span className="material-symbols-outlined text-xs">download</span> Export
+                      <Icon name="download" className="text-xs" /> Export
                     </button>
                     <button onClick={clearConversation} className="flex items-center gap-1 px-3 py-1.5 text-[10px] text-on-surface-variant/60 hover:text-red-400 transition-colors hover:bg-red-500/10 rounded-lg">
-                      <span className="material-symbols-outlined text-xs">delete_sweep</span> Clear
+                      <Icon name="delete_sweep" className="text-xs" /> Clear
                     </button>
                   </>
                 )}
                 <div className="relative">
                   <button onClick={() => setShowModelPicker(!showModelPicker)} className="flex items-center gap-2 px-3.5 py-2 bg-surface-container-low border border-surface-border/60 rounded-xl text-xs font-medium hover:border-primary/30 transition-all">
-                    <span className="material-symbols-outlined text-sm text-primary">smart_toy</span>
+                    <Icon name="smart_toy" className="text-sm text-primary" />
                     {model.label}
-                    <span className={`material-symbols-outlined text-[10px] text-on-surface-variant transition-transform ${showModelPicker ? "rotate-180" : ""}`}>expand_more</span>
+                    <Icon name="expand_more" className={`text-[10px] text-on-surface-variant transition-transform ${showModelPicker ? "rotate-180" : ""}`} />
                   </button>
                   {showModelPicker && (
                     <div className="absolute right-0 top-full mt-2 w-60 bg-surface-container border border-surface-border/60 rounded-xl shadow-xl z-50 py-2">
@@ -358,9 +359,7 @@ export default function ChatAIPage() {
               {visibleMessages.map((msg, i) => (
                 <div key={i} className={`group flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === "user" ? "bg-primary/20" : "bg-accent-cyan/20"}`}>
-                    <span className={`material-symbols-outlined text-sm ${msg.role === "user" ? "text-primary" : "text-accent-cyan"}`} style={{ fontVariationSettings: "'FILL' 1" }}>
-                      {msg.role === "user" ? "person" : "smart_toy"}
-                    </span>
+                    <Icon name={msg.role === "user" ? "person" : "smart_toy"} className={`text-sm ${msg.role === "user" ? "text-primary" : "text-accent-cyan"}`} />
                   </div>
                   <div className={`max-w-[75%] relative ${msg.role === "user" ? "bg-primary/10 border border-primary/20" : "bg-surface-container-low border border-surface-border/40"} rounded-2xl px-4 py-3`}>
                     {msg.images && msg.images.length > 0 && (
@@ -376,11 +375,11 @@ export default function ChatAIPage() {
                       <Markdown content={msg.content} />
                     )}
                     <div className={`flex items-center gap-2 mt-1.5 opacity-0 group-hover:opacity-100 transition-opacity ${msg.role === "user" ? "justify-start flex-row-reverse" : "justify-end"}`}>
-                      <button onClick={() => copyMessage(msg.content)} className="text-[10px] text-on-surface-variant/50 hover:text-primary transition-colors" title="Copy"><span className="material-symbols-outlined text-[10px]">content_copy</span></button>
+                      <button onClick={() => copyMessage(msg.content)} className="text-[10px] text-on-surface-variant/50 hover:text-primary transition-colors" title="Copy"><Icon name="content_copy" className="text-[10px]" /></button>
                       {msg.role === "user" && (
                         <>
-                          <button onClick={() => startEditing(i)} className="text-[10px] text-on-surface-variant/50 hover:text-primary transition-colors" title="Edit"><span className="material-symbols-outlined text-[10px]">edit</span></button>
-                          <button onClick={() => deleteMessage(i)} className="text-[10px] text-on-surface-variant/50 hover:text-red-400 transition-colors" title="Delete"><span className="material-symbols-outlined text-[10px]">delete</span></button>
+                          <button onClick={() => startEditing(i)} className="text-[10px] text-on-surface-variant/50 hover:text-primary transition-colors" title="Edit"><Icon name="edit" className="text-[10px]" /></button>
+                          <button onClick={() => deleteMessage(i)} className="text-[10px] text-on-surface-variant/50 hover:text-red-400 transition-colors" title="Delete"><Icon name="delete" className="text-[10px]" /></button>
                         </>
                       )}
                       {msg.time && <span className="text-[9px] text-on-surface-variant/30">{formatTime(msg.time)}</span>}
@@ -391,7 +390,7 @@ export default function ChatAIPage() {
               {streamingContent && (
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-accent-cyan/20 flex items-center justify-center shrink-0">
-                    <span className="material-symbols-outlined text-sm text-accent-cyan" style={{ fontVariationSettings: "'FILL' 1" }}>smart_toy</span>
+                    <Icon name="smart_toy" className="text-sm text-accent-cyan" />
                   </div>
                   <div className="max-w-[75%] bg-surface-container-low border border-surface-border/40 rounded-2xl px-4 py-3">
                     <Markdown content={streamingContent} />
@@ -400,7 +399,7 @@ export default function ChatAIPage() {
               )}
               {loading && !streamingContent && (
                 <div className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full bg-accent-cyan/20 flex items-center justify-center shrink-0"><span className="material-symbols-outlined text-sm text-accent-cyan" style={{ fontVariationSettings: "'FILL' 1" }}>smart_toy</span></div>
+                  <div className="w-8 h-8 rounded-full bg-accent-cyan/20 flex items-center justify-center shrink-0"><Icon name="smart_toy" className="text-sm text-accent-cyan" /></div>
                   <div className="bg-surface-container-low border border-surface-border/40 rounded-2xl px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
@@ -423,7 +422,7 @@ export default function ChatAIPage() {
                         <div key={img.id} className="relative group/img w-16 h-16 rounded-lg overflow-hidden border border-surface-border/60">
                           <img src={img.dataUrl} alt="" className="w-full h-full object-cover" />
                           <button onClick={() => removeAttached(img.id)} className="absolute top-0.5 right-0.5 w-4 h-4 bg-black/70 rounded-full flex items-center justify-center opacity-0 group-hover/img:opacity-100 transition-opacity">
-                            <span className="material-symbols-outlined text-[8px] text-white">close</span>
+                            <Icon name="close" className="text-[8px] text-white" />
                           </button>
                         </div>
                       ))}
@@ -431,7 +430,7 @@ export default function ChatAIPage() {
                   )}
                   <div className="relative flex items-end gap-2">
                     <button onClick={() => fileInputRef.current?.click()} className="shrink-0 w-8 h-8 bg-surface-container-low border border-surface-border/60 rounded-lg flex items-center justify-center hover:border-primary/30 transition-all" title="Attach image">
-                      <span className="material-symbols-outlined text-sm text-on-surface-variant/80">image</span>
+                      <Icon name="image" className="text-sm text-on-surface-variant/80" />
                     </button>
                     <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => { addImages(e.target.files); e.target.value = ""; }} />
                     <div className="flex-1 relative">
@@ -449,15 +448,15 @@ export default function ChatAIPage() {
                       />
                       {isEditMode ? (
                         <button onClick={saveEdit} disabled={!input.trim()} className="absolute right-1.5 bottom-1.5 w-8 h-8 bg-accent-cyan/80 rounded-lg flex items-center justify-center transition-all active:scale-90 hover:bg-accent-cyan disabled:opacity-50">
-                          <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
+                          <Icon name="check" className="text-white text-sm" />
                         </button>
                       ) : loading ? (
                         <button onClick={stopGeneration} className="absolute right-1.5 bottom-1.5 w-8 h-8 bg-red-500/80 rounded-lg flex items-center justify-center transition-all active:scale-90 hover:bg-red-500">
-                          <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>stop</span>
+                          <Icon name="stop" className="text-white text-sm" />
                         </button>
                       ) : (
                         <button onClick={sendMessage} disabled={!input.trim() && attachedImages.length === 0} className="absolute right-1.5 bottom-1.5 w-8 h-8 primary-gradient rounded-lg flex items-center justify-center shadow-lg shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-90">
-                          <span className="material-symbols-outlined text-white text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>send</span>
+                          <Icon name="send" className="text-white text-sm" />
                         </button>
                       )}
                     </div>
@@ -467,12 +466,12 @@ export default function ChatAIPage() {
               <div className="flex items-center justify-center gap-3 mt-2">
                 {!loading && visibleMessages.length > 1 && (
                   <button onClick={regenerate} className="text-[10px] text-on-surface-variant/60 hover:text-primary transition-colors flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">replay</span> Regenerate
+                    <Icon name="replay" className="text-xs" /> Regenerate
                   </button>
                 )}
                 {isEditMode && (
                   <button onClick={() => { setEditingIdx(-1); setInput(""); }} className="text-[10px] text-on-surface-variant/60 hover:text-white transition-colors flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs">close</span> Cancel edit
+                    <Icon name="close" className="text-xs" /> Cancel edit
                   </button>
                 )}
               </div>

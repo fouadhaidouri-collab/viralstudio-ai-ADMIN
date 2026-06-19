@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider, useSidebar } from "../components/SidebarContext";
+import Icon from "../components/Icon";
 
 const REEL_COUNTS = [10, 20, 30, 40, 50];
 const CLIP_LENGTHS = ["15s", "30s", "45s", "60s"];
@@ -169,19 +170,19 @@ export default function ClippingPage() {
       <header className="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] z-40 bg-surface/70 backdrop-blur-xl border-b border-surface-border/50 flex justify-between items-center px-4 md:px-8 h-14 md:h-16" style={{ boxShadow: '0 1px 20px rgba(0,0,0,0.3)' }}>
         <div className="md:hidden">
           <button onClick={() => setMobileOpen(true)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-surface-container-low border border-surface-border/50 hover:bg-surface-container-high transition-all active:scale-90">
-            <span className="material-symbols-outlined text-white text-xl">menu</span>
+            <Icon name="menu" className="text-white text-xl" />
           </button>
         </div>
         <div className="hidden md:flex items-center gap-4 bg-surface-container-low px-4 py-1.5 rounded-full border border-surface-border/60 w-96">
-          <span className="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+          <Icon name="search" className="text-on-surface-variant text-sm" />
           <input className="bg-transparent border-none focus:ring-0 text-sm w-full text-on-surface placeholder:text-on-surface-variant/50" placeholder="Search project assets..." type="text" />
         </div>
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-container-low border border-surface-border/60 rounded-xl hover:border-yellow-400/30 transition-all duration-200">
-            <span className="material-symbols-outlined text-sm text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+            <Icon name="bolt" className="text-sm text-yellow-400" />
             <span className="text-sm font-bold text-yellow-400">0</span>
             <button onClick={() => router.push("/pricing")} className="ml-1 w-5 h-5 flex items-center justify-center rounded-full bg-yellow-400/15 hover:bg-yellow-400/25 transition-all duration-200 hover:scale-110 active:scale-95">
-              <span className="material-symbols-outlined text-[10px] text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>add</span>
+              <Icon name="add" className="text-[10px] text-yellow-400" />
             </button>
           </div>
           <ProfileDropdown />
@@ -207,12 +208,12 @@ export default function ClippingPage() {
               {file ? (
                 <div className="w-full">
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="material-symbols-outlined text-primary text-3xl">video_file</span>
+                    <Icon name="video_file" className="text-primary text-3xl" />
                     <div className="flex-1 min-w-0 text-left">
                       <p className="text-sm font-medium truncate">{file.name}</p>
                       <p className="text-[10px] text-on-surface-variant">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
                     </div>
-                    <button onClick={() => setFile(null)} className="material-symbols-outlined text-on-surface-variant hover:text-red-400 text-lg">close</button>
+                    <button onClick={() => setFile(null)}><Icon name="close" className="text-on-surface-variant hover:text-red-400 text-lg" /></button>
                   </div>
                   <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
                     <div className="h-full w-full bg-primary rounded-full" />
@@ -222,7 +223,7 @@ export default function ClippingPage() {
               ) : (
                 <>
                   <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                    <span className="material-symbols-outlined text-primary text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>cloud_upload</span>
+                    <Icon name="cloud_upload" className="text-primary text-3xl" />
                   </div>
                   <h3 className="text-base font-semibold" style={{ fontFamily: "Geist, sans-serif" }}>Upload Video</h3>
                   <p className="text-xs text-on-surface-variant mt-1 mb-3">MP4, MOV, AVI — Max 500MB</p>
@@ -288,7 +289,7 @@ export default function ClippingPage() {
               {generating ? (
                 <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Processing...</>
               ) : (
-                <><span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>content_cut</span> {`Generate ${reelsCount} Reels`}</>
+                <><Icon name="content_cut" className="text-sm" /> {`Generate ${reelsCount} Reels`}</>
               )}
             </button>
           </div>
@@ -298,7 +299,7 @@ export default function ClippingPage() {
             {!file && !url.trim() && reels.length === 0 ? (
               <div className="text-center">
                 <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <span className="material-symbols-outlined text-primary text-5xl">content_cut</span>
+                  <Icon name="content_cut" className="text-primary text-5xl" />
                 </div>
                 <h3 className="text-xl font-semibold mb-1" style={{ fontFamily: "Geist, sans-serif" }}>AI Clipping Engine</h3>
                 <p className="text-sm text-on-surface-variant max-w-md mx-auto">Upload a video and configure settings to auto-generate viral reels with AI-powered hook detection, caption styling, and scoring.</p>
@@ -309,7 +310,7 @@ export default function ClippingPage() {
                 {progressStage === "failed" ? (
                   <div className="text-center py-4">
                     <div className="w-12 h-12 rounded-full bg-error/20 flex items-center justify-center mx-auto mb-3">
-                      <span className="material-symbols-outlined text-error text-2xl">error</span>
+                      <Icon name="error" className="text-error text-2xl" />
                     </div>
                     <h4 className="text-sm font-bold text-error">Processing Failed</h4>
                     <p className="text-[10px] text-on-surface-variant mt-1">Check your video format/connection and try again.</p>
@@ -321,7 +322,7 @@ export default function ClippingPage() {
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center animate-pulse">
-                      <span className="material-symbols-outlined text-primary">auto_awesome</span>
+                      <Icon name="auto_awesome" className="text-primary" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold capitalize">{progressStage}</h4>
@@ -362,7 +363,7 @@ export default function ClippingPage() {
                     { label: "Processing", value: "~2 min", icon: "bolt", color: "text-primary" },
                   ].map((stat) => (
                     <div key={stat.label} className="glass-card rounded-2xl p-3 border border-white/5" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
-                      <span className={`material-symbols-outlined text-lg ${stat.color}`} style={{ fontVariationSettings: "'FILL' 1" }}>{stat.icon}</span>
+                      <Icon name={stat.icon} className={`text-lg ${stat.color}`} />
                       <p className="text-lg font-bold mt-1" style={{ fontFamily: "Geist, sans-serif" }}>{stat.value}</p>
                       <p className="text-[10px] text-on-surface-variant uppercase tracking-widest">{stat.label}</p>
                     </div>
@@ -387,10 +388,10 @@ export default function ClippingPage() {
                           </div>
                           <div className="absolute bottom-2 left-2 right-2">
                             <div className="flex gap-1.5">
-                              <button className="flex-1 py-1.5 bg-white/10 backdrop-blur-md rounded-md text-[9px] font-semibold text-white hover:bg-white/20 transition-colors flex items-center justify-center gap-1"><span className="material-symbols-outlined text-[10px]">play_arrow</span> Preview</button>
-                              <button className="flex-1 py-1.5 bg-white/10 backdrop-blur-md rounded-md text-[9px] font-semibold text-white hover:bg-white/20 transition-colors flex items-center justify-center gap-1"><span className="material-symbols-outlined text-[10px]">download</span> Download</button>
-                              <button className="py-1.5 px-2 bg-white/10 backdrop-blur-md rounded-md text-white hover:bg-white/20 transition-colors"><span className="material-symbols-outlined text-[10px]">edit</span></button>
-                              <button className="py-1.5 px-2 bg-white/10 backdrop-blur-md rounded-md text-white hover:bg-white/20 transition-colors"><span className="material-symbols-outlined text-[10px]">refresh</span></button>
+                              <button className="flex-1 py-1.5 bg-white/10 backdrop-blur-md rounded-md text-[9px] font-semibold text-white hover:bg-white/20 transition-colors flex items-center justify-center gap-1"><Icon name="play_arrow" className="text-[10px]" /> Preview</button>
+                              <button className="flex-1 py-1.5 bg-white/10 backdrop-blur-md rounded-md text-[9px] font-semibold text-white hover:bg-white/20 transition-colors flex items-center justify-center gap-1"><Icon name="download" className="text-[10px]" /> Download</button>
+                              <button className="py-1.5 px-2 bg-white/10 backdrop-blur-md rounded-md text-white hover:bg-white/20 transition-colors"><Icon name="edit" className="text-[10px]" /></button>
+                              <button className="py-1.5 px-2 bg-white/10 backdrop-blur-md rounded-md text-white hover:bg-white/20 transition-colors"><Icon name="refresh" className="text-[10px]" /></button>
                             </div>
                           </div>
                         </div>
@@ -421,7 +422,7 @@ export default function ClippingPage() {
 
                 {/* Export */}
                 <button className="w-full py-3 glass-card rounded-2xl font-bold text-sm text-primary hover:bg-primary/10 transition-all duration-200 flex items-center justify-center gap-2 border border-primary/20 hover:border-primary/40 active:scale-[0.97]" style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.05), transparent)' }}>
-                  <span className="material-symbols-outlined text-base">download</span>
+                  <Icon name="download" className="text-base" />
                   {`Export All Reels (${reels.length} clips)`}
                 </button>
               </>

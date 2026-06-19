@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Icon from "../components/Icon";
 
 const wallets = {
   usdt: "TX7q9Qs3kS6LqX1p3RgY9Zn4mN8bH2vDcK",
@@ -60,13 +61,13 @@ export default function PayPage() {
         <header className="flex items-center justify-between mb-6 md:mb-10">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-[10px] bg-gradient-to-br from-primary to-purple-700 flex items-center justify-center shadow-lg shadow-primary/30">
-              <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+              <Icon name="bolt" className="text-white text-lg" />
             </div>
             <span className="text-lg font-extrabold tracking-tight" style={{ fontFamily: 'Geist, sans-serif' }}>ViralStudio AI</span>
           </div>
           <div className="flex items-center gap-3">
             <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-green-500/10 border border-green-500/20 rounded-lg">
-              <span className="material-symbols-outlined text-[12px] text-green-400" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+              <Icon name="lock" className="text-[12px] text-green-400" />
               <span className="text-[10px] text-green-400 font-semibold">Secure Checkout</span>
             </div>
             <span className="text-sm font-bold text-white/60">USD</span>
@@ -117,7 +118,7 @@ export default function PayPage() {
                       : "text-on-surface-variant/60 hover:text-white hover:bg-surface-container/50"
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm">{tab.icon}</span>
+                  <Icon name={tab.icon} className="text-sm" />
                   {tab.label}
                 </button>
               ))}
@@ -128,7 +129,7 @@ export default function PayPage() {
               <div className="glass-card rounded-2xl border border-white/5 p-6 card-glow animate-fade-in-up">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/20">
-                    <span className="material-symbols-outlined text-white text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>credit_card</span>
+                    <Icon name="credit_card" className="text-white text-lg" />
                   </div>
                   <div>
                     <h3 className="text-base font-bold">Credit / Debit Card</h3>
@@ -141,7 +142,7 @@ export default function PayPage() {
                   <div>
                     <label className="text-[10px] font-semibold text-on-surface-variant/60 uppercase tracking-widest mb-1.5 block">Card Number</label>
                     <div className="flex items-center gap-2 bg-surface-container-lowest border border-surface-border/60 rounded-xl px-4 py-3 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
-                      <span className="material-symbols-outlined text-sm text-on-surface-variant/40">credit_card</span>
+                      <Icon name="credit_card" className="text-sm text-on-surface-variant/40" />
                       <input type="text" placeholder="4242 4242 4242 4242" className="bg-transparent text-sm text-white w-full outline-none placeholder:text-on-surface-variant/30 font-mono" />
                     </div>
                   </div>
@@ -171,7 +172,7 @@ export default function PayPage() {
                   href={process.env.NEXT_PUBLIC_YOUCANPAY_LINK || "#"}
                   className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 active:scale-[0.97] hover:translate-y-[-1px] bg-gradient-to-r from-primary to-purple-700 text-white shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 tap-target"
                 >
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                  <Icon name="lock" className="text-sm" />
                   Pay ${displayPrice} Securely
                 </a>
 
@@ -197,8 +198,8 @@ export default function PayPage() {
                     You will be redirected to PayPal to complete your payment of <strong className="text-white">${annual ? `$${totalAnnual} USD (annual)` : `$${displayPrice} USD`}</strong>. Your plan will be activated immediately after payment confirmation.
                   </p>
                   <div className="flex items-center gap-2 text-[10px] text-on-surface-variant/50">
-                    <span className="material-symbols-outlined text-[12px] text-green-400" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span> Buyer Protection
-                    <span className="material-symbols-outlined text-[12px] text-green-400 ml-2" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span> 14-Day Refund
+                    <Icon name="check_circle" className="text-[12px] text-green-400" /> Buyer Protection
+                    <Icon name="check_circle" className="text-[12px] text-green-400 ml-2" /> 14-Day Refund
                   </div>
                 </div>
 
@@ -226,7 +227,7 @@ export default function PayPage() {
                 </div>
 
                 <p className="text-[11px] text-yellow-400/70 bg-yellow-400/5 border border-yellow-400/10 rounded-lg px-4 py-2.5 mb-5 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
+                  <Icon name="info" className="text-sm" />
                   Send <strong className="text-white">${annual ? `$${totalAnnual} USD` : `$${displayPrice} USD`}</strong>. After sending, contact us via WhatsApp with the TXID.
                 </p>
 
@@ -247,9 +248,9 @@ export default function PayPage() {
                           className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary/20 transition-all text-[10px] font-semibold tap-target"
                         >
                           {copied === w.key ? (
-                            <><span className="material-symbols-outlined text-[11px] text-green-400">check</span><span className="text-green-400">Copied!</span></>
+                            <><Icon name="check" className="text-[11px] text-green-400" /><span className="text-green-400">Copied!</span></>
                           ) : (
-                            <><span className="material-symbols-outlined text-[11px] text-primary">content_copy</span><span className="text-primary">Copy</span></>
+                            <><Icon name="content_copy" className="text-[11px] text-primary" /><span className="text-primary">Copy</span></>
                           )}
                         </button>
                       </div>
@@ -270,7 +271,7 @@ export default function PayPage() {
 
               <div className="flex items-center gap-3 mb-5 pb-5 border-b border-white/5">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-700 flex items-center justify-center shadow-lg shadow-primary/20">
-                  <span className="material-symbols-outlined text-white text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>
+                  <Icon name="auto_awesome" className="text-white text-xl" />
                 </div>
                 <div>
                   <p className="text-sm font-bold">{plan.name} Plan</p>
@@ -294,7 +295,7 @@ export default function PayPage() {
               </div>
 
               <div className="bg-green-500/5 border border-green-500/10 rounded-lg px-4 py-2.5 flex items-center gap-2 mb-5">
-                <span className="material-symbols-outlined text-[14px] text-green-400" style={{ fontVariationSettings: "'FILL' 1" }}>flash_on</span>
+                <Icon name="flash_on" className="text-[14px] text-green-400" />
                 <span className="text-[10px] text-green-300 font-medium">Instant access after payment confirmation</span>
               </div>
 
@@ -307,7 +308,7 @@ export default function PayPage() {
                   { icon: "replay", label: "14-Day Refund" },
                 ].map((t) => (
                   <div key={t.label} className="flex items-center gap-1.5 px-2 py-1.5 bg-surface-container-low rounded-lg">
-                    <span className="material-symbols-outlined text-[12px] text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>{t.icon}</span>
+                    <Icon name={t.icon} className="text-[12px] text-primary" />
                     <span className="text-[9px] text-on-surface-variant/60 font-medium">{t.label}</span>
                   </div>
                 ))}
@@ -326,13 +327,13 @@ export default function PayPage() {
                 href={process.env.NEXT_PUBLIC_WHATSAPP_LINK || "#"}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.97] hover:translate-y-[-1px] bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/35 tap-target"
               >
-                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span> WhatsApp Support
+                <Icon name="chat" className="text-sm" /> WhatsApp Support
               </a>
               <a
                 href="mailto:support@viralstudio.ai"
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200 active:scale-[0.97] hover:translate-y-[-1px] btn-subtle text-white border border-surface-border/60 hover:border-primary/30 tap-target"
               >
-                <span className="material-symbols-outlined text-sm">mail</span> Email Us
+                <Icon name="mail" className="text-sm" /> Email Us
               </a>
             </div>
           </div>

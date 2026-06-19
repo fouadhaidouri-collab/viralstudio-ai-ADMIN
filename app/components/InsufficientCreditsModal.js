@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Icon from "./Icon";
 export default function InsufficientCreditsModal({ needed, current, onClose }) {
   const router = useRouter();
   return (
@@ -7,7 +8,7 @@ export default function InsufficientCreditsModal({ needed, current, onClose }) {
       <div className="bg-surface-container border border-surface-border/60 rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-4" onClick={(e) => e.stopPropagation()} style={{ boxShadow: "0 25px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.08)" }}>
         <div className="flex flex-col items-center text-center gap-4">
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-yellow-400/20 to-yellow-500/10 flex items-center justify-center border border-yellow-400/20">
-            <span className="material-symbols-outlined text-2xl text-yellow-400" style={{ fontVariationSettings: "'FILL' 1" }}>bolt</span>
+            <Icon name="bolt" className="text-yellow-400" size={24} />
           </div>
           <div>
             <h3 className="text-base font-bold text-white mb-1">Insufficient Credits</h3>

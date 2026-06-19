@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Icon from "./Icon";
 
 export default function ProfileDropdown() {
   const router = useRouter();
@@ -12,7 +13,7 @@ export default function ProfileDropdown() {
       style={{ background: 'linear-gradient(135deg, #a855f7, #6366f1)' }}
     >
       <div className="w-full h-full rounded-full bg-surface flex items-center justify-center">
-        <span className="material-symbols-outlined text-primary/80 text-lg" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
+        <Icon name="person" className="text-primary/80" size={18} />
       </div>
     </button>
   );
