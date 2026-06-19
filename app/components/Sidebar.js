@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
 import Icon from "./Icon";
 
-const homeItem = { href: "/", label: "Dashboard", icon: "dashboard" };
+const homeItem = { href: "/", label: "Home", icon: "dashboard" };
 const toolItems = [
   { href: "/ai-video", label: "AI Video", icon: "movie" },
   { href: "/chat-ai", label: "Chat AI", icon: "chat" },
