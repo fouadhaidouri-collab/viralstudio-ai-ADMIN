@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import Sidebar from "../components/Sidebar";
@@ -9,8 +9,10 @@ import { SidebarProvider } from "../components/SidebarContext";
 import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
+import {
+  USD_TO_CREDIT, videoAspectRatios, videoResolutions, videoDurations, videoModelCapabilities
+} from "../lib/capabilities";
 
-const USD_TO_CREDIT = 1000 / 29;
 const BASE_DURATION_SEC = 5;
 const secFromDuration = (d) => {
   const n = parseInt(d, 10);
@@ -20,26 +22,16 @@ const durationMultiplier = (d) => secFromDuration(d) / BASE_DURATION_SEC;
 const resolutionMultiplier = (r) => r === "1080p" ? 1.5 : 1;
 
 const aiModels = [
-  { label: "Veo 3.1 Fast", icon: "videocam", color: "#7c3aed", fallbackPrice: 0.08 },
-  { label: "Grok Imagine Video", icon: "psychology", color: "#06b6d4", fallbackPrice: 0.10 },
-  { label: "SeeDance 1.5", icon: "directions_run", color: "#f59e0b", fallbackPrice: 0.10 },
-  { label: "SeeDance 2.0", icon: "directions_run", color: "#f97316", fallbackPrice: 0.10 },
-  { label: "Kling 3.0", icon: "smart_display", color: "#ef4444", fallbackPrice: 0.15 },
-  { label: "Runway Gen 4.5", icon: "run_circle", color: "#10b981", fallbackPrice: 0.25 },
-  { label: "Luma Ray 2", icon: "flare", color: "#8b5cf6", fallbackPrice: 0.20 },
-  { label: "Pika 2.1", icon: "pets", color: "#ec4899", fallbackPrice: 0.20 },
-  { label: "Happy Horse", icon: "emoji_nature", color: "#14b8a6", fallbackPrice: 0.28 },
+  { label: "Veo 3.1 Fast", icon: "videocam", color: "#7c3aed" },
+  { label: "Grok Imagine Video", icon: "psychology", color: "#06b6d4" },
+  { label: "SeeDance 1.5", icon: "directions_run", color: "#f59e0b" },
+  { label: "SeeDance 2.0", icon: "directions_run", color: "#f97316" },
+  { label: "Kling 3.0", icon: "smart_display", color: "#ef4444" },
+  { label: "Runway Gen 4.5", icon: "run_circle", color: "#10b981" },
+  { label: "Luma Ray 2", icon: "flare", color: "#8b5cf6" },
+  { label: "Pika 2.1", icon: "pets", color: "#ec4899" },
+  { label: "Happy Horse", icon: "emoji_nature", color: "#14b8a6" },
 ];
-
-const aspectRatios = [
-  { label: "Cinematic 16:9", icon: "crop_16_9" },
-  { label: "Instagram 9:16", icon: "crop_portrait" },
-  { label: "Square 1:1", icon: "crop_square" },
-  { label: "Portrait 4:5", icon: "crop_7_5" },
-];
-
-const resolutions = ["720p", "1080p"];
-const durations = ["5 seconds", "8 seconds", "10 seconds", "15 seconds"];
 
 const FAL_MODEL_IDS = {
   "Veo 3.1 Fast": "fal-ai/veo3.1/fast",
@@ -55,7 +47,7 @@ const FAL_MODEL_IDS = {
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
-function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution }) {
+function ModelDropdown({ label, value, options, onChange, compact, pricingMap, duration, resolution, capabilities }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -88,7 +80,7 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
           <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
           {(() => {
             const p = pricingMap?.[value.label];
-            const price = p ? p.unitPrice : value.fallbackPrice;
+            const price = p ? p.unitPrice : 0;
             return price ? <span className="text-[9px] text-yellow-400 font-medium shrink-0">{(price * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)}</span> : null;
           })()}
         </span>
@@ -107,20 +99,31 @@ function ModelDropdown({ label, value, options, onChange, compact, pricingMap, d
                 <button
                   key={opt.label}
                   onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
+                  className={`w-full flex items-start gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
                   style={{ paddingTop: "12px", paddingBottom: "12px", background: selected ? "rgba(139,92,246,0.15)" : "transparent" }}
                 >
-                  <Icon name={opt.icon} className="text-base flex-shrink-0" style={{ color: opt.color }} />
-                  <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
-                  {(() => {
-                    const p = pricingMap?.[opt.label];
-                    const price = p ? p.unitPrice : opt.fallbackPrice;
-                    const unit = p ? p.unit : "video";
-                    return price ? (
-                      <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
-                    ) : null;
-                  })()}
-                  {selected && <Icon name="check" className="text-xs ml-auto text-primary" />}
+                  <Icon name={opt.icon} className="text-base flex-shrink-0 mt-0.5" style={{ color: opt.color }} />
+                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
+                      {capabilities?.[opt.label]?.resolutions?.map(r => (
+                        <span key={r} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{r}</span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {(() => {
+                        const p = pricingMap?.[opt.label];
+                        const price = p ? p.unitPrice : 0;
+                        return price ? (
+                          <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
+                        ) : null;
+                      })()}
+                      {capabilities?.[opt.label]?.durations?.map(d => (
+                        <span key={d} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{d.replace(" seconds", "s")}</span>
+                      ))}
+                      {selected && <Icon name="check" className="text-xs text-primary ml-auto" />}
+                    </div>
+                  </div>
                 </button>
               );
             })}
@@ -182,9 +185,9 @@ export default function AIVideoPage() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
   const [model, setModel] = useState(aiModels[0]);
-  const [aspectRatio, setAspectRatio] = useState(aspectRatios[0]);
-  const [resolution, setResolution] = useState(resolutions[0]);
-  const [duration, setDuration] = useState(durations[0]);
+  const [aspectRatio, setAspectRatio] = useState(videoAspectRatios[0]);
+  const [resolution, setResolution] = useState(videoResolutions[0]);
+  const [duration, setDuration] = useState(videoDurations[0]);
   const [videoCount, setVideoCount] = useState(1);
   const [images, setImages] = useState([]);
   const [generating, setGenerating] = useState(false);
@@ -226,6 +229,23 @@ export default function AIVideoPage() {
       })
       .catch(() => {});
   }, []);
+
+  const caps = videoModelCapabilities[model.label] || videoModelCapabilities["Veo 3.1 Fast"];
+  const availableAspectRatios = videoAspectRatios.filter(ar => caps.aspectRatios.includes(ar.label));
+  const availableResolutions = videoResolutions.filter(r => caps.resolutions.includes(r));
+  const availableDurations = videoDurations.filter(d => caps.durations.includes(d));
+
+  useEffect(() => {
+    const c = videoModelCapabilities[model.label];
+    if (!c) return;
+    if (c.aspectRatios.length > 0 && !c.aspectRatios.includes(aspectRatio.label)) {
+      const first = videoAspectRatios.find(ar => ar.label === c.aspectRatios[0]);
+      if (first) setAspectRatio(first);
+    }
+    if (!c.resolutions.includes(resolution)) setResolution(c.resolutions[0]);
+    if (!c.durations.includes(duration)) setDuration(c.durations[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [model.label]);
 
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
@@ -283,7 +303,7 @@ export default function AIVideoPage() {
     if (!prompt.trim()) return;
 
     const p = pricing?.[model.label];
-    const unitPrice = p ? p.unitPrice : model.fallbackPrice;
+    const unitPrice = p ? p.unitPrice : 0;
     if (unitPrice) {
       const totalCost = unitPrice * videoCount * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT;
       if (credits < totalCost) {
@@ -378,11 +398,13 @@ export default function AIVideoPage() {
               )}
 
               <div className="mt-auto pt-3 shrink-0 space-y-2">
-                <ModelDropdown label="AI Model" value={model} options={aiModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution} />
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={aspectRatios} onChange={(v) => setAspectRatio(v)} compact />
-                  <Dropdown label="Resolution" value={resolution} options={resolutions} onChange={setResolution} compact />
-                  <Dropdown label="Duration" value={duration} options={durations} onChange={setDuration} compact />
+                <ModelDropdown label="AI Model" value={model} options={aiModels} onChange={setModel} compact pricingMap={pricing} duration={duration} resolution={resolution} capabilities={videoModelCapabilities} />
+                <div className={`grid grid-cols-2 gap-2 ${availableAspectRatios.length > 0 ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
+                  {availableAspectRatios.length > 0 && (
+                    <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={availableAspectRatios} onChange={(v) => setAspectRatio(v)} compact />
+                  )}
+                  <Dropdown label="Resolution" value={resolution} options={availableResolutions} onChange={setResolution} compact />
+                  <Dropdown label="Duration" value={duration} options={availableDurations} onChange={setDuration} compact />
                   <Dropdown label="Quantity" value={String(videoCount)} options={["1", "2", "3", "4", "5"]} onChange={(v) => setVideoCount(Number(v))} compact />
                 </div>
                 <button
@@ -396,7 +418,7 @@ export default function AIVideoPage() {
                   ) : (
                     <><Icon name="auto_videocam" className="text-sm" /> Generate Video {(() => {
                       const p = pricing?.[model.label];
-                      const price = p ? p.unitPrice : model.fallbackPrice;
+                      const price = p ? p.unitPrice : 0;
                       return price ? <span className="text-yellow-300/90">({(price * videoCount * durationMultiplier(duration) * resolutionMultiplier(resolution) * USD_TO_CREDIT).toFixed(0)} credits)</span> : null;
                     })()}</>
                 )}

@@ -8,26 +8,22 @@ import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider, useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
+import {
+  USD_TO_CREDIT, imageAspectRatios, imageResolutions, imageModelCapabilities
+} from "../lib/capabilities";
 
 const TEMPLATE_VIDEOS = Array.from({ length: 11 }, (_, i) => `/templates/template${i + 1}.mp4`);
 
 const imageModels = [
-  { label: "GPT Image 2", icon: "🧠", color: "#10b981", credits: 5, endpoint: "fal-ai/flux-pro" },
-  { label: "NanoBanana 2", icon: "🍌", color: "#f59e0b", credits: 3, endpoint: "fal-ai/recraft-20b" },
-  { label: "NanoBanana Pro", icon: "👔", color: "#8b5cf6", credits: 4, endpoint: "fal-ai/ideogram/v2" },
-  { label: "NanoBanana", icon: "☀️", color: "#ec4899", credits: 2, endpoint: "fal-ai/stable-diffusion-v3" },
-  { label: "Imagen 4", icon: "✨", color: "#06b6d4", credits: 6, endpoint: "fal-ai/imagen-3" },
-  { label: "Grok", icon: "🔥", color: "#ef4444", credits: 4, endpoint: "fal-ai/flux-dev" },
+  { label: "GPT Image 2", icon: "🧠", color: "#10b981", endpoint: "fal-ai/flux-pro" },
+  { label: "NanoBanana 2", icon: "🍌", color: "#f59e0b", endpoint: "fal-ai/recraft-20b" },
+  { label: "NanoBanana Pro", icon: "👔", color: "#8b5cf6", endpoint: "fal-ai/ideogram/v2" },
+  { label: "NanoBanana", icon: "☀️", color: "#ec4899", endpoint: "fal-ai/stable-diffusion-v3" },
+  { label: "Imagen 4", icon: "✨", color: "#06b6d4", endpoint: "fal-ai/imagen-3" },
+  { label: "Grok", icon: "🔥", color: "#ef4444", endpoint: "fal-ai/flux-dev" },
 ];
 
-const aspectRatios = [
-  { label: "Square 1:1", icon: "crop_square" },
-  { label: "Portrait 4:5", icon: "crop_7_5" },
-  { label: "Landscape 16:9", icon: "crop_16_9" },
-  { label: "Portrait 9:16", icon: "crop_portrait" },
-];
-
-function ImageModelDropdown({ value, options, onChange }) {
+function ImageModelDropdown({ value, options, onChange, pricingMap, capabilities }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0 });
   const ref = useRef(null);
@@ -54,11 +50,15 @@ function ImageModelDropdown({ value, options, onChange }) {
         onClick={toggle}
         className="w-full flex items-center justify-between gap-1.5 bg-surface-container-lowest border border-surface-border rounded-xl hover:border-primary/50 transition-all px-2.5 py-1.5"
       >
-        <span className="flex items-center gap-1.5 truncate min-w-0">
-          <span className="text-[11px] flex-shrink-0" role="img">{value.icon}</span>
-          <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
-          <span className="text-[9px] text-yellow-400 font-medium shrink-0">{value.credits} credits</span>
-        </span>
+          <span className="flex items-center gap-1.5 truncate min-w-0">
+            <span className="text-[11px] flex-shrink-0" role="img">{value.icon}</span>
+            <span className="font-semibold text-white text-[11px] truncate">{value.label}</span>
+            {(() => {
+              const p = pricingMap?.[value.label];
+              const price = p ? p.unitPrice : 0;
+              return price ? <span className="text-[9px] text-yellow-400 font-medium shrink-0">{(price * USD_TO_CREDIT).toFixed(0)} cr</span> : null;
+            })()}
+          </span>
         <Icon name="expand_more" className={`text-[10px] text-on-surface-variant shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
       {open && typeof document !== "undefined" && createPortal(
@@ -74,13 +74,28 @@ function ImageModelDropdown({ value, options, onChange }) {
                 <button
                   key={opt.label}
                   onClick={() => { onChange(opt); setOpen(false); }}
-                  className={`w-full flex items-center gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
+                  className={`w-full flex items-start gap-3 px-5 transition-all duration-150 ${selected ? "" : "hover:bg-white/[0.04]"}`}
                   style={{ paddingTop: "12px", paddingBottom: "12px", background: selected ? "rgba(139,92,246,0.15)" : "transparent" }}
                 >
-                  <span className="text-base flex-shrink-0" role="img">{opt.icon}</span>
-                  <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
-                  <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium ml-auto">{opt.credits} credits</span>
-                  {selected && <Icon name="check" className="text-xs ml-1 text-primary" />}
+                  <span className="text-base flex-shrink-0 mt-0.5" role="img">{opt.icon}</span>
+                  <div className="flex flex-col gap-0.5 min-w-0 flex-1">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-semibold" style={{ color: selected ? "#a78bfa" : "#ffffff" }}>{opt.label}</span>
+                      {capabilities?.[opt.label]?.resolutions?.map(r => (
+                        <span key={r} className="text-[8px] px-1 py-px rounded bg-white/5 text-on-surface-variant">{r}</span>
+                      ))}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {(() => {
+                        const p = pricingMap?.[opt.label];
+                        const price = p ? p.unitPrice : 0;
+                        return price ? (
+                          <span className="text-[9px] text-yellow-400 shrink-0 whitespace-nowrap font-medium">{(price * USD_TO_CREDIT).toFixed(0)} cr</span>
+                        ) : null;
+                      })()}
+                      {selected && <Icon name="check" className="text-xs text-primary ml-auto" />}
+                    </div>
+                  </div>
                 </button>
               );
             })}
@@ -142,7 +157,7 @@ export default function AIImagePage() {
   const router = useRouter();
   const [selectedModel, setSelectedModel] = useState(imageModels[3]);
   const [prompt, setPrompt] = useState("");
-  const [aspectRatio, setAspectRatio] = useState(aspectRatios[0]);
+  const [aspectRatio, setAspectRatio] = useState(imageAspectRatios[0]);
   const [resolution, setResolution] = useState("720p");
   const [imageCount, setImageCount] = useState(1);
   const [images, setImages] = useState([]);
@@ -153,9 +168,41 @@ export default function AIImagePage() {
   const [credits] = useState(0);
   const [showCreditModal, setShowCreditModal] = useState(false);
   const [neededCredits, setNeededCredits] = useState(0);
+  const [pricing, setPricing] = useState({});
   const fileInputRef = useRef();
   const [bgVideoIdx, setBgVideoIdx] = useState(0);
   const { setMobileOpen } = useSidebar();
+
+  useEffect(() => {
+    const ids = imageModels.map(m => m.endpoint).join(",");
+    fetch(`/api/model-pricing?endpoint_ids=${ids}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.prices) {
+          const m = {};
+          for (const model of imageModels) {
+            if (data.prices[model.endpoint]) m[model.label] = data.prices[model.endpoint];
+          }
+          setPricing(m);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const caps = imageModelCapabilities[selectedModel.label] || imageModelCapabilities["GPT Image 2"];
+  const availableAspectRatios = imageAspectRatios.filter(ar => caps.aspectRatios.includes(ar.label));
+  const availableResolutions = imageResolutions.filter(r => caps.resolutions.includes(r));
+
+  useEffect(() => {
+    const c = imageModelCapabilities[selectedModel.label];
+    if (!c) return;
+    if (!c.aspectRatios.includes(aspectRatio.label)) {
+      const first = imageAspectRatios.find(ar => ar.label === c.aspectRatios[0]);
+      if (first) setAspectRatio(first);
+    }
+    if (!c.resolutions.includes(resolution)) setResolution(c.resolutions[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedModel.label]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -177,8 +224,10 @@ export default function AIImagePage() {
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
-    const totalCost = selectedModel.credits * imageCount;
-    if (credits < totalCost) { setNeededCredits(totalCost); setShowCreditModal(true); return; }
+    const p = pricing?.[selectedModel.label];
+    const unitPrice = p ? p.unitPrice : 0;
+    const totalCost = unitPrice * USD_TO_CREDIT * imageCount;
+    if (credits < totalCost) { setNeededCredits(Math.ceil(totalCost)); setShowCreditModal(true); return; }
     setGenerating(true);
     setImageUrls([]);
     setImageError(null);
@@ -298,12 +347,12 @@ export default function AIImagePage() {
               <div className="mt-auto pt-3 shrink-0 space-y-2">
                 <div>
                   <div className="text-[10px] text-on-surface-variant uppercase tracking-widest mb-1.5 font-medium">Model</div>
-                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} />
+                  <ImageModelDropdown value={selectedModel} options={imageModels} onChange={setSelectedModel} pricingMap={pricing} capabilities={imageModelCapabilities} />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
-                  <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={aspectRatios} onChange={(v) => setAspectRatio(v)} compact />
-                  <Dropdown label="Resolution" value={resolution} options={["720p", "1080p"]} onChange={setResolution} compact />
+                  <Dropdown label="Aspect Ratio" value={aspectRatio.label} options={availableAspectRatios} onChange={(v) => setAspectRatio(v)} compact />
+                  <Dropdown label="Resolution" value={resolution} options={availableResolutions} onChange={setResolution} compact />
                   <Dropdown label="Quantity" value={String(imageCount)} options={["1", "2", "3", "4", "5"]} onChange={(v) => setImageCount(Number(v))} compact />
                 </div>
 
@@ -317,7 +366,8 @@ export default function AIImagePage() {
                     <><svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg> Generating...</>
                   ) : (
                     <><Icon name="auto_awesome" className="text-sm" /> Generate Image {(() => {
-                      const total = selectedModel.credits * imageCount;
+                      const up = pricing?.[selectedModel.label]?.unitPrice || 0;
+                      const total = (up * USD_TO_CREDIT * imageCount).toFixed(0);
                       return <span className="text-yellow-300/90">({total} credits)</span>;
                     })()}</>
                   )}
