@@ -14,6 +14,7 @@ const toolItems = [
   { href: "/ugc-engine", label: "UGC Engine", icon: "record_voice_over", soon: true },
   { href: "/hook-gen", label: "Hook Gen", icon: "auto_awesome", soon: true },
   { href: "/clipping", label: "Clipping", icon: "content_cut", soon: true },
+  { href: "/admin", label: "Admin Panel", icon: "shield" },
 ];
 
 function SidebarContent() {
@@ -76,20 +77,6 @@ function SidebarContent() {
             </Link>
           );
         })}
-        {user && (
-          <Link
-            href="/admin"
-            onClick={handleNav}
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl transition-all duration-200 active:scale-[0.97] ${
-              pathname.startsWith("/admin")
-                ? "primary-gradient text-white shadow-lg shadow-primary/30"
-                : "text-on-surface-variant hover:bg-[rgba(255,255,255,0.04)] hover:text-white hover:translate-x-0.5"
-            }`}
-          >
-            <Icon name="settings" className="shrink-0" size={20} />
-            <span className="sidebar-link-text flex-1">Admin Panel</span>
-          </Link>
-        )}
       </nav>
       <div className="mt-auto pt-4 border-t border-surface-border/40 px-2">
         <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-surface-container-low border border-surface-border/40" style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.03)' }}>
