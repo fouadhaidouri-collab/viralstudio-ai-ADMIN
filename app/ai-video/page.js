@@ -391,7 +391,7 @@ export default function AIVideoPage() {
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full flex-1 bg-surface-container-lowest border border-surface-border rounded-xl p-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none transition-all placeholder:text-on-surface-variant/40"
+                className="w-full min-h-[100px] xl:flex-1 bg-surface-container-lowest border border-surface-border rounded-xl p-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none transition-all placeholder:text-on-surface-variant/40"
                 placeholder="Describe the video you want to create. Be as detailed as possible for best results."
               ></textarea>
 
@@ -448,7 +448,7 @@ export default function AIVideoPage() {
           </div>
 
           {/* RIGHT: Preview Area */}
-          <div className="hidden xl:flex flex-col gap-3 min-w-0">
+          <div className="flex flex-col gap-3 min-w-0">
             <div style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }} className="glass-card rounded-2xl relative bg-black flex-1 flex flex-col border border-white/5 card-glow">
               <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden">
                 <div style={{ background: 'radial-gradient(ellipse at center, rgba(168,85,247,0.08) 0%, transparent 70%)' }} className="absolute inset-0"></div>
