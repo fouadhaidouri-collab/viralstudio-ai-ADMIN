@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import AuthGuard from "../components/AuthGuard";
@@ -23,9 +23,16 @@ export default function ProfilePage() {
   const name = user?.name || email.split("@")[0];
   const username = email.split("@")[0];
   const photoURL = user?.photoURL || gravatarUrl(email);
-  const creditsDisplay = user?.credits?.toLocaleString() || "1,250";
-  const plan = user?.plan || "Pro Plan";
+  const [realCredits, setRealCredits] = useState(null);
+  const creditsDisplay = (realCredits ?? user?.credits ?? 1250).toLocaleString();
+  const plan = user?.plan || "Free";
+  const planIcon = plan === "Free" ? "person" : "workspace_premium";
+  const planColor = plan === "Free" ? "text-on-surface-variant bg-surface-container-high border-surface-border/40" : "text-primary bg-primary/15 border-primary/20";
   const memberSince = user?.memberSince || "Jan 2026";
+
+  useEffect(() => {
+    fetch("/api/credits").then(r => r.json()).then(d => { if (d.balance != null) setRealCredits(d.balance); }).catch(() => {});
+  }, []);
 
   const tabs = [
     { key: "overview", label: "Overview", icon: "person" },
@@ -56,8 +63,8 @@ export default function ProfilePage() {
                 <h1 className="text-xl md:text-2xl font-bold text-white truncate">{name}</h1>
                 <p className="text-sm text-on-surface-variant mt-0.5">{email} · @{username}</p>
                 <div className="flex items-center gap-3 mt-1.5">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-primary/15 text-primary border border-primary/20">
-                    <Icon name="workspace_premium" size={12} /> {plan}
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold border ${planColor}`}>
+                    <Icon name={planIcon} size={12} /> {plan}
                   </span>
                   <span className="text-[11px] text-on-surface-variant">Member since {memberSince}</span>
                 </div>
@@ -97,13 +104,7 @@ export default function ProfilePage() {
                     <span className="text-sm font-medium text-on-surface-variant">Available Credits</span>
                     <Icon name="bolt" className="text-yellow-400" size={18} />
                   </div>
-                  <div className="text-3xl md:text-4xl font-bold text-white mb-3">{creditsDisplay}</div>
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 flex-1 rounded-full bg-surface-container-high overflow-hidden">
-                      <div className="h-full rounded-full" style={{ width: '65%', background: 'linear-gradient(90deg, #a855f7, #6366f1)' }} />
-                    </div>
-                    <span className="text-[11px] text-on-surface-variant shrink-0">65% remaining</span>
-                  </div>
+                  <div className="text-3xl md:text-4xl font-bold text-white">{creditsDisplay}</div>
                 </div>
               </div>
 
