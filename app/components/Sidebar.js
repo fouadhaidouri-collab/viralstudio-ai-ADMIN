@@ -11,6 +11,9 @@ const toolItems = [
   { href: "/ai-video", label: "AI Video", icon: "movie" },
   { href: "/chat-ai", label: "Chat AI", icon: "chat" },
   { href: "/ai-image", label: "Image Lab", icon: "image" },
+  { href: "/ugc-engine", label: "UGC Engine", icon: "record_voice_over", soon: true },
+  { href: "/hook-gen", label: "Hook Gen", icon: "auto_awesome", soon: true },
+  { href: "/clipping", label: "Clipping", icon: "content_cut", soon: true },
 ];
 
 function SidebarContent() {
@@ -69,6 +72,7 @@ function SidebarContent() {
             >
               <Icon name={item.icon} className="shrink-0" size={20} />
               <span className="sidebar-link-text flex-1">{item.label}</span>
+              {item.soon && <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-md bg-yellow-400/15 text-yellow-400 border border-yellow-400/20 uppercase tracking-wider">Soon</span>}
             </Link>
           );
         })}

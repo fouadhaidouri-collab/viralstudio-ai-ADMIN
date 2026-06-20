@@ -37,6 +37,15 @@ const features = [
     btn: "Launch Video Lab",
   },
   {
+    href: "/chat-ai",
+    title: "Chat AI",
+    desc: "Intelligent assistant that helps you brainstorm, script, and refine your content strategy.",
+    icon: "chat",
+    color: "text-yellow-400",
+    bg: "bg-yellow-400/10",
+    btn: "Start Chatting",
+  },
+  {
     href: "/ai-image",
     title: "AI Images",
     desc: "Ultra-realistic 8K image generation for thumbnails, covers, and conceptual art.",
@@ -44,6 +53,36 @@ const features = [
     color: "text-secondary",
     bg: "bg-secondary/20",
     btn: "Open Image Lab",
+  },
+  {
+    href: "/ugc-engine",
+    title: "UGC Engine",
+    desc: "Create realistic AI avatars and voiceovers for authentic-feeling user content.",
+    icon: "record_voice_over",
+    color: "text-tertiary",
+    bg: "bg-tertiary/20",
+    btn: "Design Avatar",
+    soon: true,
+  },
+  {
+    href: "/hook-gen",
+    title: "Hook Gen",
+    desc: "Optimize your video intros with AI hooks designed for maximum retention.",
+    icon: "auto_awesome",
+    color: "text-primary",
+    bg: "bg-primary/20",
+    btn: "Optimize Script",
+    soon: true,
+  },
+  {
+    href: "/clipping",
+    title: "Clipping",
+    desc: "Automatically extract high-engagement vertical clips from long-form content.",
+    icon: "content_cut",
+    color: "text-accent-orange",
+    bg: "bg-accent-orange/20",
+    btn: "Process Video",
+    soon: true,
   },
 ];
 
@@ -109,12 +148,15 @@ export default function Dashboard() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {features.map((f) => (
-              <Link key={f.href} href={f.href} className="glass-card p-5 rounded-2xl flex flex-col group min-h-[200px] glass-card-hover card-glow" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
+              <Link key={f.href} href={f.href} className={`glass-card p-5 rounded-2xl flex flex-col group min-h-[200px] glass-card-hover card-glow ${f.soon ? 'opacity-60 hover:opacity-80' : ''}`} style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.02), transparent)' }}>
                 <div className="flex justify-between items-start mb-4">
                   <div className={`w-12 h-12 rounded-xl ${f.bg} flex items-center justify-center ${f.color} shadow-lg icon-glow`}>
                     <Icon name={f.icon} size={28} />
                   </div>
-                  <Icon name="north_east" className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-primary -translate-x-2 group-hover:translate-x-0" size={16} />
+                  <div className="flex items-center gap-2">
+                    {f.soon && <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-md bg-yellow-400/15 text-yellow-400 border border-yellow-400/20 uppercase tracking-wider">Soon</span>}
+                    <Icon name="north_east" className="opacity-0 group-hover:opacity-100 transition-all duration-300 text-primary -translate-x-2 group-hover:translate-x-0" size={16} />
+                  </div>
                 </div>
                 <h3 className="text-2xl font-semibold mb-2 text-white" style={{ fontFamily: 'Geist, sans-serif' }}>{f.title}</h3>
                 <p className="text-sm text-on-surface-variant flex-1">{f.desc}</p>

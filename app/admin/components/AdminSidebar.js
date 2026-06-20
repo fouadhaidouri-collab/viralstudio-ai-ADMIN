@@ -10,6 +10,8 @@ const menuGroups = [
       { href: "/admin", label: "Overview", icon: "dashboard" },
       { href: "/admin/users", label: "Users", icon: "group_add" },
       { href: "/admin/credits", label: "Credits", icon: "currency_bitcoin" },
+      { href: "/admin/payment-methods", label: "Payments", icon: "credit_card" },
+      { href: "/admin/payment-logs", label: "Payment Logs", icon: "webhook" },
     ],
   },
   {
@@ -34,7 +36,6 @@ const menuGroups = [
     heading: "Business",
     items: [
       { href: "/admin/plans", label: "Plans & Pricing", icon: "workspace_premium" },
-      { href: "/admin/payments", label: "Payments", icon: "credit_card" },
       { href: "/admin/affiliates", label: "Affiliates", icon: "share" },
     ],
   },
