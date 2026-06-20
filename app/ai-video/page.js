@@ -9,6 +9,22 @@ import { SidebarProvider } from "../components/SidebarContext";
 import { useSidebar } from "../components/SidebarContext";
 import InsufficientCreditsModal from "../components/InsufficientCreditsModal";
 import Icon from "../components/Icon";
+
+function AspectIcon({ label, size = "text-sm" }) {
+  const ratioStr = label.split(" ").find(s => s.includes(":")) || label;
+  const [w, h] = ratioStr.split(":").map(Number);
+  if (isNaN(w) || isNaN(h)) return null;
+  const max = 16;
+  const ratio = w / h;
+  let width, height;
+  if (ratio >= 1) { width = max; height = max / ratio; }
+  else { height = max; width = max * ratio; }
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className={`${size} shrink-0`} style={{ minWidth: width }}>
+      <rect x="0.5" y="0.5" width={width - 1} height={height - 1} rx="1.5" fill="none" stroke="currentColor" strokeOpacity="0.7" />
+    </svg>
+  );
+}
 import {
   videoModels, videoAspectRatios, videoResolutions, videoModelCapabilities
 } from "../lib/capabilities";
@@ -130,6 +146,7 @@ function Dropdown({ label, value, options, onChange, compact }) {
           {(() => {
             const match = options.find(o => (typeof o === "string" ? o : o.label) === value);
             if (match && typeof match !== "string") {
+              if (match.label?.includes(":")) return <><AspectIcon label={match.label} />{value}</>;
               return <><Icon name={match.icon} className="text-sm" style={{color: match.color || "#d2bbff"}} />{value}</>;
             }
             return value;
@@ -145,7 +162,7 @@ function Dropdown({ label, value, options, onChange, compact }) {
               onClick={() => { onChange(opt); setOpen(false); }}
               className={`w-full text-left px-3 py-2.5 text-sm transition-all duration-150 flex items-center gap-2 ${value === (typeof opt === "string" ? opt : opt.label) ? "text-white bg-primary/15 border-l-2 border-primary" : "text-on-surface hover:bg-white/[0.06] hover:text-white border-l-2 border-transparent"}`}
             >
-              {typeof opt !== "string" && <Icon name={opt.icon} className="text-base" style={{color: opt.color || "#d2bbff"}} />}
+              {typeof opt !== "string" && (opt.label?.includes(":") ? <AspectIcon label={opt.label} /> : <Icon name={opt.icon} className="text-base" style={{color: opt.color || "#d2bbff"}} />)}
               {typeof opt === "string" ? opt : opt.label}
             </button>
           ))}
