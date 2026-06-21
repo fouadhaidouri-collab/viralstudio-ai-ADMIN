@@ -336,7 +336,8 @@ export default function AIImagePage() {
             key={src}
             src={src}
             muted autoPlay loop playsInline
-            className={`absolute inset-0 w-full h-full object-fill transition-opacity duration-1000 ${
+            preload="none"
+            className={`absolute inset-0 w-full h-full object-fill transition-opacity duration-1000 hidden md:block ${
               i === bgVideoIdx ? "opacity-60" : "opacity-0"
             }`}
           />
