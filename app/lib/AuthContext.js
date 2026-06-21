@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const AuthContext = createContext({
   user: null,
@@ -8,107 +9,64 @@ const AuthContext = createContext({
   signUp: () => {},
   googleLogin: () => {},
   logout: () => {},
-  refreshCredits: () => {},
   isAuthenticated: false,
   loading: true,
   loginError: "",
   setLoginError: () => {},
 });
 
-function lsUsers() {
-  try { return JSON.parse(localStorage.getItem("auth_users") || "{}"); } catch { return {}; }
-}
-
-function lsSave(u) { localStorage.setItem("app_user", JSON.stringify(u)); }
-function lsGet() {
-  try { return JSON.parse(localStorage.getItem("app_user")); } catch { return null; }
-}
-function lsRemove() { localStorage.removeItem("app_user"); }
-
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { data: session, status } = useSession();
   const [loginError, setLoginError] = useState("");
 
-  useEffect(() => {
-    setUser(lsGet());
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    if (user) lsSave(user);
-  }, [user]);
-
-  const refreshCredits = () => {
-    fetch("/api/credits").then(r => r.json()).then(d => {
-      if (d.balance != null && user) {
-        const u = { ...user, credits: d.balance };
-        setUser(u);
+  const user = session?.user
+    ? {
+        uid: session.user.id || session.user.email,
+        email: session.user.email,
+        name: session.user.name || session.user.email?.split("@")[0],
+        photoURL: session.user.image || null,
+        credits: 1250,
+        plan: "Pro Plan",
+        memberSince: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
       }
-    }).catch(() => {});
-  };
+    : null;
 
-  const signUp = (name, email, password) => {
+  const login = async (email, password) => {
     setLoginError("");
-    const e = email.trim().toLowerCase();
-    const users = lsUsers();
-    if (users[e]) {
-      setLoginError("This email is already registered. Please sign in.");
-      return false;
-    }
-    users[e] = { name, email: e, password, credits: 1250, plan: "Pro Plan", memberSince: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }) };
-    localStorage.setItem("auth_users", JSON.stringify(users));
-    const u = { ...users[e], password: undefined };
-    setUser(u);
-    refreshCredits();
-    return true;
-  };
-
-  const login = (email, password) => {
-    setLoginError("");
-    const e = email.trim().toLowerCase();
-    const users = lsUsers();
-    const stored = users[e];
-    if (!stored) {
+    const result = await signIn("credentials", { email, password, redirect: false });
+    if (result?.error) {
       setLoginError("Account not found. Please sign up.");
       return false;
     }
-    if (stored.password !== password) {
-      setLoginError("Wrong email or password.");
+    return true;
+  };
+
+  const signUp = async (name, email, password) => {
+    setLoginError("");
+    const result = await signIn("credentials", { email, password, redirect: false });
+    if (result?.error) {
+      setLoginError(result.error);
       return false;
     }
-    const u = { ...stored, password: undefined };
-    setUser(u);
-    refreshCredits();
     return true;
   };
 
-  const googleLogin = () => {
+  const googleLogin = async () => {
     setLoginError("");
-    const u = {
-      uid: "google_" + Date.now(),
-      email: "google.user@gmail.com",
-      name: "Google User",
-      photoURL: null,
-      credits: 1250,
-      plan: "Pro Plan",
-      memberSince: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
-    };
-    setUser(u);
-    refreshCredits();
+    await signIn("google", { redirect: false });
     return true;
   };
 
-  const logout = () => {
-    setUser(null);
-    lsRemove();
+  const logout = async () => {
+    await signOut({ redirect: false });
   };
 
   return (
     <AuthContext.Provider value={{
-      user, login, signUp, googleLogin, logout, refreshCredits,
-      isAuthenticated: !!user,
-      loading, loginError, setLoginError,
+      user, login, signUp, googleLogin, logout,
+      isAuthenticated: status === "authenticated",
+      loading: status === "loading",
+      loginError, setLoginError,
     }}>
       {children}
     </AuthContext.Provider>

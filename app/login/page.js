@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Icon from "../components/Icon";
 import { useAuth } from "../lib/AuthContext";
 
@@ -10,7 +11,7 @@ export default function LoginPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signUp, login, googleLogin, isAuthenticated, loginError, setLoginError, loading } = useAuth();
+  const { isAuthenticated, loginError, setLoginError, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -28,8 +29,12 @@ export default function LoginPage() {
       setLoginError("Password must be at least 6 characters");
       return;
     }
-    const ok = await signUp(name, email, password);
-    if (ok) router.push("/");
+    const result = await signIn("credentials", { email, password, name, redirect: false });
+    if (result?.error) {
+      setLoginError("Account not found. Please sign up.");
+      return;
+    }
+    router.push("/");
   };
 
   const handleSignIn = async (e) => {
@@ -39,13 +44,17 @@ export default function LoginPage() {
       setLoginError("Please enter email and password");
       return;
     }
-    const ok = await login(email, password);
-    if (ok) router.push("/");
+    const result = await signIn("credentials", { email, password, redirect: false });
+    if (result?.error) {
+      if (result.error.includes("CredentialsSignin")) setLoginError("Account not found. Please sign up.");
+      else setLoginError("Wrong email or password.");
+      return;
+    }
+    router.push("/");
   };
 
   const handleGoogle = async () => {
-    const ok = await googleLogin();
-    if (ok) router.push("/");
+    await signIn("google", { callbackUrl: "/" });
   };
 
   return (

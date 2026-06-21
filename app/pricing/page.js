@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import ProfileDropdown from "../components/ProfileDropdown";
 import { SidebarProvider, useSidebar } from "../components/SidebarContext";
+import { useAuth } from "../lib/AuthContext";
 import Icon from "../components/Icon";
 
 const DISCOUNT = 0.30;
@@ -110,6 +111,7 @@ const cryptoOptions = [
 export default function PricingPage() {
   const router = useRouter();
   const { setMobileOpen } = useSidebar();
+  const { isAuthenticated } = useAuth();
   const [annual, setAnnual] = useState(true);
   const [credits, setCredits] = useState(null);
 
@@ -225,6 +227,7 @@ export default function PricingPage() {
 
                   <button
                     onClick={() => {
+                      if (!isAuthenticated) { router.push("/login"); return; }
                       if (plan.name === "Enterprise") {
                         window.location.href = "mailto:sales@viralstudio.ai";
                       } else {
