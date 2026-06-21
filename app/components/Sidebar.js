@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
-import { useAuth } from "../lib/AuthContext";
 import Icon from "./Icon";
 
 const homeItem = { href: "/", label: "Home", icon: "dashboard" };
@@ -14,13 +13,11 @@ const toolItems = [
   { href: "/ugc-engine", label: "UGC Engine", icon: "record_voice_over", soon: true },
   { href: "/hook-gen", label: "Hook Gen", icon: "auto_awesome", soon: true },
   { href: "/clipping", label: "Clipping", icon: "content_cut", soon: true },
-  { href: "/admin", label: "Admin Panel", icon: "shield" },
 ];
 
 function SidebarContent() {
   const pathname = usePathname();
   const { setMobileOpen } = useSidebar();
-  const { user } = useAuth();
 
   const handleNav = () => setMobileOpen(false);
 
